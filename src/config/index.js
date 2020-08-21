@@ -12,12 +12,13 @@ export const defaults = {};
  */
 export const engineConfig = {
   sceneSettings: {
-    background: color("#ff0000"),
+    background: color("#eeeeee"),
   },
   cameraSettings: {
     fov: 50,
     near: 0.1,
     far: 500,
+    position: { x: 0, y: 0.5, z: 3 },
   },
   rendererSettings: {
     constructor: {

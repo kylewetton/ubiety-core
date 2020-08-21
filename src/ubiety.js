@@ -8,7 +8,15 @@
 import _ from "lodash";
 import { isElement } from "./utils/error";
 import { defaults } from "./config";
-import { scene, renderer, camera } from "./engine";
+import {
+  getNewScene,
+  getNewRenderer,
+  getNewCamera,
+  getNewLoadingManager,
+  getGLTFLoader,
+  getNewControls,
+} from "./engine";
+
 import { getSize } from "./utils";
 
 /**
@@ -26,7 +34,9 @@ export default class Ubiety {
    */
 
   constructor(root, options = {}) {
-    /** Constructor: Settings */
+    /**
+     * Constructor: Settings
+     * */
 
     this.root = root instanceof Element ? root : document.querySelector(root);
     isElement(
@@ -36,34 +46,60 @@ export default class Ubiety {
 
     this.settings = _.defaultsDeep(options, defaults);
 
-    /** Constructor: Engine parts */
+    /**
+     * Constructor: Engine parts
+     * */
 
-    this.scene = scene;
-    this.renderer = renderer;
-    this.camera = camera;
+    this.scene = getNewScene();
+    this.renderer = getNewRenderer();
+    this.camera = getNewCamera();
+    this.modelManager = getNewLoadingManager();
+    this.textureManager = getNewLoadingManager();
+    this.gltfLoader = getGLTFLoader(this.modelManager);
+    this.controls = getNewControls(this.camera, this.renderer.domElement);
   }
+
+  /**
+   * Mounting phase
+   * */
 
   mount() {
     this._createEvents();
-    this._buildEngine();
-  }
 
-  _buildEngine() {
-    this._updateAspect();
-    this.root.appendChild(this.renderer.domElement);
-    this.renderer.render(this.scene, this.camera);
-  }
+    this.gltfLoader.load("./public/test-shoe.glb", (gltf) => {
+      const { scene } = gltf;
+      this.scene.add(scene);
+    });
 
-  _updateAspect() {
-    const { width, height } = getSize(this.root);
-    this.camera.aspect = width / height;
-    this.renderer.setSize(width, height);
-    this.camera.updateProjectionMatrix();
+    this.modelManager.onLoad = () => {
+      this._buildEngine();
+    };
   }
 
   _createEvents() {
     window.addEventListener("resize", () => {
       this._updateAspect();
     });
+
+    this.controls.addEventListener("change", () => {
+      this.renderer.render(this.scene, this.camera);
+    });
+  }
+
+  _buildEngine() {
+    this._updateAspect();
+    this.root.appendChild(this.renderer.domElement);
+  }
+
+  /**
+   * Runtime phase
+   * */
+
+  _updateAspect() {
+    const { width, height } = getSize(this.root);
+    this.camera.aspect = width / height;
+    this.renderer.setSize(width, height);
+    this.camera.updateProjectionMatrix();
+    this.renderer.render(this.scene, this.camera);
   }
 }
