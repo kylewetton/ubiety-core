@@ -1,29 +1,16 @@
 {
-  "name": "kw-js-boilerplate",
-  "version": "1.0.0",
-  "description": "JavaScript app boilerplate 2020.",
+  "name": "ubiety",
+  "version": "0.0.1",
+  "description": "Ubiety core module.",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack/webpack.config.prod.js  --colors",
     "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js",
     "test": "jest --watch"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wbkd/webpack-starter.git"
+    "type": "git"
   },
-  "keywords": [
-    "webpack",
-    "startkit",
-    "frontend",
-    "es6",
-    "javascript",
-    "webdev"
-  ],
   "author": "Kyle Wetton",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/wbkd/webpack-starter/issues"
-  },
   "devDependencies": {
     "@babel/core": "^7.11.4",
     "@babel/plugin-proposal-class-properties": "^7.10.4",

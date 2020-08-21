@@ -2,14 +2,12 @@
  * The main class for building a Ubiety instance
  *
  * @author    Kyle Wetton
- * @copyright Livrée. All rights reserved.
+ * @copyright Kyle Wetton. All rights reserved.
  */
 
 import _ from "lodash";
 import { isElement } from "./utils/error";
 import { defaults } from "./config";
-
-// import "./styles/index.scss";
 
 /**
  * The main class for building a single customiser instance
@@ -39,7 +37,3 @@ export default class Ubiety {
     console.log(this.settings);
   }
 }
-
-const app = new Ubiety("#app", {});
-
-app.mount();
