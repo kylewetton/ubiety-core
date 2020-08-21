@@ -8,6 +8,8 @@
 import _ from "lodash";
 import { isElement } from "./utils/error";
 import { defaults } from "./config";
+import { scene, renderer, camera } from "./engine";
+import { getSize } from "./utils";
 
 /**
  * The main class for building a single customiser instance
@@ -24,6 +26,8 @@ export default class Ubiety {
    */
 
   constructor(root, options = {}) {
+    /** Constructor: Settings */
+
     this.root = root instanceof Element ? root : document.querySelector(root);
     isElement(
       this.root,
@@ -31,9 +35,35 @@ export default class Ubiety {
     );
 
     this.settings = _.defaultsDeep(options, defaults);
+
+    /** Constructor: Engine parts */
+
+    this.scene = scene;
+    this.renderer = renderer;
+    this.camera = camera;
   }
 
   mount() {
-    console.log(this.settings);
+    this._createEvents();
+    this._buildEngine();
+  }
+
+  _buildEngine() {
+    this._updateAspect();
+    this.root.appendChild(this.renderer.domElement);
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  _updateAspect() {
+    const { width, height } = getSize(this.root);
+    this.camera.aspect = width / height;
+    this.renderer.setSize(width, height);
+    this.camera.updateProjectionMatrix();
+  }
+
+  _createEvents() {
+    window.addEventListener("resize", () => {
+      this._updateAspect();
+    });
   }
 }

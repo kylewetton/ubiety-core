@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
-    app: Path.resolve(__dirname, "../src/index.js"),
+    app: Path.resolve(__dirname, "../src/ubiety.js"),
   },
   output: {
     path: Path.join(__dirname, "../dist"),
@@ -19,9 +19,12 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [{ from: Path.resolve(__dirname, "../public"), to: "public" }],
-    }),
+    new CopyWebpackPlugin([
+      {
+        from: Path.resolve(__dirname, "../public"),
+        to: "public",
+      },
+    ]),
   ],
   resolve: {
     alias: {
