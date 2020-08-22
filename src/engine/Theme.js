@@ -1,5 +1,5 @@
 /**
- * The main class for building a Ubiety instance
+ * A class for generating a world theme (lighting and floor)
  *
  * @author    Kyle Wetton
  * @copyright Kyle Wetton. All rights reserved.

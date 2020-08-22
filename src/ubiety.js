@@ -6,7 +6,6 @@
  */
 
 import _ from "lodash";
-import { HemisphereLight, DirectionalLight } from "three";
 import { isElement, exists } from "./utils/error";
 import { defaults } from "./config";
 import {
@@ -16,11 +15,12 @@ import {
   getNewLoadingManager,
   getGLTFLoader,
   getNewControls,
+  getNewRaycaster,
   theme,
 } from "./engine";
 
 import { getSize, color } from "./utils";
-import getNewMaterial from "./materials";
+import Section from "./sections";
 
 /**
  * The main class for building a single customiser instance
@@ -33,7 +33,7 @@ export default class Ubiety {
    * @throws {Error} When the given root element or selector is invalid.
    *
    * @param {Element|string}  root       - A selector for a root element or an element itself.
-   * @param {Object}          settings    - Optional. Options to change default behaviour.
+   * @param {Object}          settings   - Optional. Options to change default behaviour.
    */
 
   constructor(root, modelPath, settings = {}) {
@@ -62,6 +62,7 @@ export default class Ubiety {
     this.textureManager = getNewLoadingManager();
     this.gltfLoader = getGLTFLoader(this.modelManager);
     this.controls = getNewControls(this.camera, this.renderer.domElement);
+    this.raycaster = getNewRaycaster();
     this._loop = this._loop.bind(this);
 
     /**
@@ -69,6 +70,8 @@ export default class Ubiety {
      * */
 
     this.model = null;
+    this.sections = [];
+    this.mouse = { x: 0, y: 0 };
   }
 
   /**
@@ -90,7 +93,14 @@ export default class Ubiety {
             (material) => material.tag === o.name
           );
 
-          o.material = getNewMaterial(materialSettings[0]);
+          const section = new Section(o);
+          section.updateMaterial(materialSettings[0]);
+
+          if (o.name === "base") {
+            section.setActive(true);
+          }
+
+          this.sections.push(section);
         }
       });
 
@@ -108,6 +118,41 @@ export default class Ubiety {
     window.addEventListener("resize", () => {
       this._updateAspect();
     });
+
+    window.addEventListener(
+      "mousemove",
+      (evt) => this._updateMousePosition(evt),
+      false
+    );
+
+    this.renderer.domElement.addEventListener(
+      "mousedown",
+      () => {
+        this.mouseDownPosition = { ...this.mouse };
+      },
+      false
+    );
+
+    this.renderer.domElement.addEventListener(
+      "mouseup",
+      () => {
+        const looseMouse = {
+          x: _.round(this.mouse.x, 2),
+          y: _.round(this.mouse.y, 2),
+        };
+        const looseDownMouse = {
+          x: _.round(this.mouseDownPosition.x, 2),
+          y: _.round(this.mouseDownPosition.y, 2),
+        };
+        if (
+          looseMouse.x === looseDownMouse.x &&
+          looseMouse.y === looseDownMouse.y
+        ) {
+          this._raycast();
+        }
+      },
+      false
+    );
 
     this.controls.addEventListener("change", () => {
       this.renderer.render(this.scene, this.camera);
@@ -138,8 +183,56 @@ export default class Ubiety {
     this.renderer.render(this.scene, this.camera);
   }
 
+  _updateMousePosition(evt) {
+    const { width, height } = getSize(this.root);
+    this.mouse.x = (evt.clientX / width) * 2 - 1;
+    this.mouse.y = -(evt.clientY / height) * 2 + 1;
+  }
+
+  _raycast() {
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObjects(
+      this.scene.children,
+      true
+    );
+    if (intersects.length) {
+      const { object } = intersects[0];
+      const tag = object.name;
+      if (tag) {
+        this.setActiveSection(tag);
+      }
+    }
+  }
+
+  _render() {
+    this.renderer.render(this.scene, this.camera);
+  }
+
   _loop() {
     requestAnimationFrame(this._loop);
     this.controls.update();
+  }
+
+  /**
+   * Actions
+   */
+
+  dispatch(settings) {
+    const section = this.sections.filter((s) => s.isActive())[0];
+    section.updateMaterial(settings);
+    this._render();
+  }
+
+  setActiveSection(tag) {
+    const updateSections = this.sections.map((section) => {
+      if (tag === section.tag) {
+        section.setActive(true);
+        section.flash(this);
+      } else {
+        section.setActive(false);
+      }
+      return section;
+    });
+    this.sections = updateSections;
   }
 }

@@ -4,7 +4,6 @@ import { color } from "../utils";
 
 const getNewMaterial = (options = {}) => {
   const defaults = {
-    tag: "!",
     type: "phong",
     color: "#F1F1F1",
     texture: null,

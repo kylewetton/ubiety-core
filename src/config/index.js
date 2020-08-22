@@ -1,7 +1,12 @@
 import { Math as ThreeMath } from "three";
+
+// eslint-disable-next-line import/no-cycle
 import { color } from "../utils";
+// eslint-disable-next-line import/no-cycle
+import getNewMaterial from "../materials";
 
 export const APP_NAME = "Ubiety";
+export const BRAND_COLOR = "#11864a";
 
 /**
  * Default config for the Ubiety class
@@ -59,7 +64,7 @@ export const defaultTheme = {
       id: "directional",
       color: 0xffffff,
       intensity: 1,
-      position: { x: -8, y: 16, z: 0 },
+      position: { x: 0, y: 16, z: 0 },
       shadows: true,
       mapSize: 1024,
     },
@@ -67,7 +72,7 @@ export const defaultTheme = {
       id: "directional",
       color: 0xffffff,
       intensity: 1,
-      position: { x: 8, y: 16, z: 0 },
+      position: { x: 0, y: 16, z: 0 },
       shadows: false,
       mapSize: 16,
     },
@@ -77,6 +82,15 @@ export const defaultTheme = {
     depth: 20,
     shadowOnly: true,
     shininess: 1,
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
   },
+};
+
+/**
+ * Flash material
+ */
+
+export const flashSettings = {
+  material: getNewMaterial({ color: BRAND_COLOR }),
+  speed: 200,
 };

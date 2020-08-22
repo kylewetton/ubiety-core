@@ -13,6 +13,7 @@ import {
   WebGLRenderer,
   LoadingManager,
   GammaEncoding,
+  Raycaster,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -76,6 +77,14 @@ export const getGLTFLoader = (manager) => new GLTFLoader(manager);
 
 export const getNewLoadingManager = () => {
   return new LoadingManager();
+};
+
+/**
+ * RAYCASTER
+ */
+
+export const getNewRaycaster = () => {
+  return new Raycaster();
 };
 
 /**
