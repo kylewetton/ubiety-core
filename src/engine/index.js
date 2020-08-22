@@ -7,7 +7,13 @@
 
 /* eslint-disable import/prefer-default-export */
 
-import { Scene, PerspectiveCamera, WebGLRenderer, LoadingManager } from "three";
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  LoadingManager,
+  GammaEncoding,
+} from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { engineConfig } from "../config";
@@ -50,6 +56,10 @@ export const getNewRenderer = () => {
     ...engineConfig.rendererSettings.constructor,
   });
   rendererInstance.gammaFactor = gammaFactor;
+  rendererInstance.outputEncoding = GammaEncoding;
+  rendererInstance.physicallyCorrectLights = true;
+  rendererInstance.powerPreference = "high-performance";
+  rendererInstance.shadowMap.enabled = true;
   return rendererInstance;
 };
 

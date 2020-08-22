@@ -6,7 +6,8 @@
  */
 
 import _ from "lodash";
-import { isElement } from "./utils/error";
+import { HemisphereLight, DirectionalLight } from "three";
+import { isElement, exists } from "./utils/error";
 import { defaults } from "./config";
 import {
   getNewScene,
@@ -17,7 +18,8 @@ import {
   getNewControls,
 } from "./engine";
 
-import { getSize } from "./utils";
+import { getSize, color } from "./utils";
+import getNewMaterial from "./materials";
 
 /**
  * The main class for building a single customiser instance
@@ -30,10 +32,10 @@ export default class Ubiety {
    * @throws {Error} When the given root element or selector is invalid.
    *
    * @param {Element|string}  root       - A selector for a root element or an element itself.
-   * @param {Object}          options    - Optional. Options to change default behaviour.
+   * @param {Object}          settings    - Optional. Options to change default behaviour.
    */
 
-  constructor(root, options = {}) {
+  constructor(root, modelPath, settings = {}) {
     /**
      * Constructor: Settings
      * */
@@ -44,7 +46,9 @@ export default class Ubiety {
       "Couldn't find the root element. Make sure it exists."
     );
 
-    this.settings = _.defaultsDeep(options, defaults);
+    this.modelPath = exists(modelPath, "Please provide a path to the model.");
+
+    this.settings = _.defaultsDeep(settings, defaults);
 
     /**
      * Constructor: Engine parts
@@ -57,6 +61,12 @@ export default class Ubiety {
     this.textureManager = getNewLoadingManager();
     this.gltfLoader = getGLTFLoader(this.modelManager);
     this.controls = getNewControls(this.camera, this.renderer.domElement);
+
+    /**
+     * State
+     * */
+
+    this.model = null;
   }
 
   /**
@@ -66,8 +76,22 @@ export default class Ubiety {
   mount() {
     this._createEvents();
 
-    this.gltfLoader.load("./public/test-shoe.glb", (gltf) => {
+    this.gltfLoader.load(this.modelPath, (gltf) => {
       const { scene } = gltf;
+
+      scene.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true;
+          o.receiveShadow = true;
+
+          const materialSettings = this.settings.initialMaterials.filter(
+            (material) => material.tag === o.name
+          );
+
+          o.material = getNewMaterial(materialSettings[0]);
+        }
+      });
+
       this.scene.add(scene);
     });
 
@@ -87,8 +111,20 @@ export default class Ubiety {
   }
 
   _buildEngine() {
-    this._updateAspect();
+    /**
+     * TESTING LIGHTS
+     */
+    const light = new HemisphereLight(0xffffff, 0xffffff, 2.5);
+
+    const directionalLight = new DirectionalLight(color("#FFFFFF"), 1);
+
+    directionalLight.position.set(-8, 12, 8);
+    directionalLight.castShadow = true;
+
+    this.scene.add(light);
+    this.scene.add(directionalLight);
     this.root.appendChild(this.renderer.domElement);
+    this._updateAspect();
   }
 
   /**

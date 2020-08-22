@@ -5,14 +5,16 @@ export const APP_NAME = "Ubiety";
 /**
  * Default config for the Ubiety class
  */
-export const defaults = {};
+export const defaults = {
+  initialMaterials: [],
+};
 
 /**
  * Parameters for the 3D scene
  */
 export const engineConfig = {
   sceneSettings: {
-    background: color("#eeeeee"),
+    background: color("#f1f1f1"),
   },
   cameraSettings: {
     fov: 50,
