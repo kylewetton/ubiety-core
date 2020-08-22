@@ -54,4 +54,8 @@ export default class Section {
   isActive() {
     return this.active;
   }
+
+  isDisabled() {
+    return this.mesh.disabled;
+  }
 }

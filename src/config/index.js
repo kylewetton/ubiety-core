@@ -28,7 +28,7 @@ export const engineConfig = {
     fov: 40,
     near: 0.1,
     far: 500,
-    position: { x: 0, y: 0.5, z: 3 },
+    position: { x: -3, y: 0.5, z: 3 },
   },
   rendererSettings: {
     constructor: {
@@ -67,7 +67,7 @@ export const defaultTheme = {
       intensity: 1,
       position: { x: -5, y: 16, z: 0 },
       shadows: false,
-      mapSize: 1024,
+      mapSize: 4,
     },
     {
       id: "directional",
@@ -75,7 +75,7 @@ export const defaultTheme = {
       intensity: 1,
       position: { x: 5, y: 16, z: 0 },
       shadows: false,
-      mapSize: 16,
+      mapSize: 4,
     },
   ],
   floor: {

@@ -87,6 +87,9 @@ export default class Ubiety {
         if (o.isMesh) {
           o.castShadow = true;
           o.receiveShadow = true;
+          const name = o.name.split("|");
+          o.name = name[0];
+          o.disabled = name[1] === "disable";
 
           const materialSettings = this.settings.initialMaterials.filter(
             (material) => material.tag === o.name
@@ -224,7 +227,7 @@ export default class Ubiety {
 
   setActiveSection(tag) {
     const updateSections = this.sections.map((section) => {
-      if (tag === section.tag) {
+      if (tag === section.tag && !section.isDisabled()) {
         section.setActive(true);
         section.flash(this);
       } else {

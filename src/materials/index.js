@@ -15,10 +15,10 @@ const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 
 const getTexturePack = (pack, tag) => {
-  const { label, ...maps } = pack;
+  const { label, repeat, ...maps } = pack;
   const path = `${TEXTURE_PATH}/${label}/`;
   const texturePack = {};
-
+  const scale = repeat > 1 ? repeat : 1;
   /**
    * Dict renames the values to spread maps into material
    */
@@ -35,7 +35,7 @@ const getTexturePack = (pack, tag) => {
       const texture = textureLoader.load(`${path}${key}.jpg`);
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(1, 1);
+      texture.repeat.set(scale, scale);
       if (tag === "shadow") {
         texture.flipY = false;
       }
@@ -127,6 +127,7 @@ const getNewMaterial = (options = {}, globalParent) => {
     roughness: noTextureRoughness,
     envMapIntensity: noTextureEnvMapIntensity,
     shininess: noTextureShininess,
+    texture: noTextureTexture,
     ...textureSettings
   } = settings;
 

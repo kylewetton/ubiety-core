@@ -61,7 +61,6 @@ export const getNewRenderer = () => {
   rendererInstance.outputEncoding = GammaEncoding;
   rendererInstance.physicallyCorrectLights = true;
   rendererInstance.powerPreference = "high-performance";
-  rendererInstance.shadowMap.enabled = true;
   return rendererInstance;
 };
 
