@@ -1,3 +1,4 @@
+import { Math as ThreeMath } from "three";
 import { color } from "../utils";
 
 export const APP_NAME = "Ubiety";
@@ -7,6 +8,7 @@ export const APP_NAME = "Ubiety";
  */
 export const defaults = {
   initialMaterials: [],
+  worldOffset: -0.33,
 };
 
 /**
@@ -17,7 +19,7 @@ export const engineConfig = {
     background: color("#f1f1f1"),
   },
   cameraSettings: {
-    fov: 50,
+    fov: 40,
     near: 0.1,
     far: 500,
     position: { x: 0, y: 0.5, z: 3 },
@@ -27,5 +29,54 @@ export const engineConfig = {
       antialias: true,
     },
     gammaFactor: 2.2,
+  },
+  controlSettings: {
+    enableDampening: true,
+    enableKeys: false,
+    dampeningFactor: 0.2,
+    rotateSpeed: 0.5,
+    minPolarAngle: ThreeMath.degToRad(5),
+    maxPolarAngle: ThreeMath.degToRad(85),
+    minDistance: 2,
+    maxDistance: 4,
+  },
+};
+
+/**
+ * Theme
+ */
+
+export const defaultTheme = {
+  lights: [
+    {
+      id: "hemi",
+      sky: 0xffffff,
+      ground: 0xffffff,
+      intensity: 2.5,
+      position: { x: 0, y: 50, z: 0 },
+    },
+    {
+      id: "directional",
+      color: 0xffffff,
+      intensity: 1,
+      position: { x: -8, y: 16, z: 0 },
+      shadows: true,
+      mapSize: 1024,
+    },
+    {
+      id: "directional",
+      color: 0xffffff,
+      intensity: 1,
+      position: { x: 8, y: 16, z: 0 },
+      shadows: false,
+      mapSize: 16,
+    },
+  ],
+  floor: {
+    color: "#333333",
+    depth: 20,
+    shadowOnly: true,
+    shininess: 1,
+    shadowOpacity: 0.1,
   },
 };

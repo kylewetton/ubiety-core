@@ -16,7 +16,8 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { engineConfig } from "../config";
+import Theme from "./Theme";
+import { engineConfig, defaultTheme } from "../config";
 
 /**
  * SCENE
@@ -81,6 +82,33 @@ export const getNewLoadingManager = () => {
  * CONTROLS
  */
 
+const {
+  enableDampening,
+  enableKeys,
+  dampeningFactor,
+  rotateSpeed,
+  maxPolarAngle,
+  minPolarAngle,
+  minDistance,
+  maxDistance,
+} = engineConfig.controlSettings;
 export const getNewControls = (camera, renderer) => {
-  return new OrbitControls(camera, renderer);
+  const controlInstance = new OrbitControls(camera, renderer);
+
+  controlInstance.enableDamping = enableDampening;
+  controlInstance.enableKeys = enableKeys;
+  controlInstance.dampingFactor = dampeningFactor;
+  controlInstance.rotateSpeed = rotateSpeed;
+  controlInstance.minPolarAngle = minPolarAngle;
+  controlInstance.maxPolarAngle = maxPolarAngle;
+  controlInstance.minDistance = minDistance;
+  controlInstance.maxDistance = maxDistance;
+
+  return controlInstance;
 };
+
+/**
+ * THEME
+ */
+
+export const theme = new Theme(defaultTheme);

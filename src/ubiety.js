@@ -16,6 +16,7 @@ import {
   getNewLoadingManager,
   getGLTFLoader,
   getNewControls,
+  theme,
 } from "./engine";
 
 import { getSize, color } from "./utils";
@@ -61,6 +62,7 @@ export default class Ubiety {
     this.textureManager = getNewLoadingManager();
     this.gltfLoader = getGLTFLoader(this.modelManager);
     this.controls = getNewControls(this.camera, this.renderer.domElement);
+    this._loop = this._loop.bind(this);
 
     /**
      * State
@@ -77,9 +79,9 @@ export default class Ubiety {
     this._createEvents();
 
     this.gltfLoader.load(this.modelPath, (gltf) => {
-      const { scene } = gltf;
+      const { scene: model } = gltf;
 
-      scene.traverse((o) => {
+      model.traverse((o) => {
         if (o.isMesh) {
           o.castShadow = true;
           o.receiveShadow = true;
@@ -92,7 +94,9 @@ export default class Ubiety {
         }
       });
 
-      this.scene.add(scene);
+      model.position.y += this.settings.worldOffset;
+
+      this.scene.add(model);
     });
 
     this.modelManager.onLoad = () => {
@@ -111,20 +115,15 @@ export default class Ubiety {
   }
 
   _buildEngine() {
-    /**
-     * TESTING LIGHTS
-     */
-    const light = new HemisphereLight(0xffffff, 0xffffff, 2.5);
+    const { lights, floor } = theme;
 
-    const directionalLight = new DirectionalLight(color("#FFFFFF"), 1);
+    lights.forEach((light) => this.scene.add(light));
+    floor.position.y += this.settings.worldOffset;
+    this.scene.add(floor);
 
-    directionalLight.position.set(-8, 12, 8);
-    directionalLight.castShadow = true;
-
-    this.scene.add(light);
-    this.scene.add(directionalLight);
     this.root.appendChild(this.renderer.domElement);
     this._updateAspect();
+    this._loop();
   }
 
   /**
@@ -137,5 +136,10 @@ export default class Ubiety {
     this.renderer.setSize(width, height);
     this.camera.updateProjectionMatrix();
     this.renderer.render(this.scene, this.camera);
+  }
+
+  _loop() {
+    requestAnimationFrame(this._loop);
+    this.controls.update();
   }
 }
