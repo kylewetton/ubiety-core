@@ -16,19 +16,20 @@ export default class Section {
    * @throws {Error} When the mesh doesn't exist.
    *
    * @param {Object}          mesh       - A mesh loaded from the gLTF file.
-   * @param {Object}          settings    - Optional. Options to change default behaviour.
+   * @param {Object}          Class    - Parent Ubiety Class
    */
-  constructor(mesh) {
+  constructor(mesh, globalParent) {
     this.mesh = exists(mesh, "A Section class needs a mesh to construct. ");
     this.tag = mesh.name;
     this.active = false;
     this.currentMaterial = null;
     this.flashMaterial = flashSettings.material;
     this.previousSettings = {};
+    this.globalParent = globalParent;
   }
 
   updateMaterial(settings) {
-    const material = getNewMaterial(settings);
+    const material = getNewMaterial(settings, this.globalParent);
     this.currentMaterial = material;
     this.mesh.material = material;
   }

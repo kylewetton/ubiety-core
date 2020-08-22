@@ -19,7 +19,7 @@ import {
   theme,
 } from "./engine";
 
-import { getSize, color } from "./utils";
+import { getSize } from "./utils";
 import Section from "./sections";
 
 /**
@@ -59,7 +59,6 @@ export default class Ubiety {
     this.renderer = getNewRenderer();
     this.camera = getNewCamera();
     this.modelManager = getNewLoadingManager();
-    this.textureManager = getNewLoadingManager();
     this.gltfLoader = getGLTFLoader(this.modelManager);
     this.controls = getNewControls(this.camera, this.renderer.domElement);
     this.raycaster = getNewRaycaster();
@@ -93,7 +92,7 @@ export default class Ubiety {
             (material) => material.tag === o.name
           );
 
-          const section = new Section(o);
+          const section = new Section(o, this);
           section.updateMaterial(materialSettings[0]);
 
           if (o.name === "base") {
@@ -164,7 +163,7 @@ export default class Ubiety {
 
     lights.forEach((light) => this.scene.add(light));
     floor.position.y += this.settings.worldOffset;
-    this.scene.add(floor);
+    // this.scene.add(floor);
 
     this.root.appendChild(this.renderer.domElement);
     this._updateAspect();

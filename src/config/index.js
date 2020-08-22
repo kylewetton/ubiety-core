@@ -7,6 +7,7 @@ import getNewMaterial from "../materials";
 
 export const APP_NAME = "Ubiety";
 export const BRAND_COLOR = "#11864a";
+export const TEXTURE_PATH = "./public/textures";
 
 /**
  * Default config for the Ubiety class
@@ -57,22 +58,22 @@ export const defaultTheme = {
       id: "hemi",
       sky: 0xffffff,
       ground: 0xffffff,
-      intensity: 2.5,
+      intensity: 1.75,
       position: { x: 0, y: 50, z: 0 },
     },
     {
       id: "directional",
       color: 0xffffff,
       intensity: 1,
-      position: { x: 0, y: 16, z: 0 },
-      shadows: true,
+      position: { x: -5, y: 16, z: 0 },
+      shadows: false,
       mapSize: 1024,
     },
     {
       id: "directional",
       color: 0xffffff,
       intensity: 1,
-      position: { x: 0, y: 16, z: 0 },
+      position: { x: 5, y: 16, z: 0 },
       shadows: false,
       mapSize: 16,
     },
