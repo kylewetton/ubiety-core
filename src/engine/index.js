@@ -18,7 +18,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Theme from "./Theme";
-import { engineConfig, defaultTheme } from "../config";
+import { engineConfig, defaultTheme, spotlightTheme } from "../config";
 
 /**
  * SCENE
@@ -122,4 +122,4 @@ export const getNewControls = (camera, renderer) => {
  * THEME
  */
 
-export const theme = new Theme(defaultTheme);
+export const theme = new Theme(spotlightTheme);

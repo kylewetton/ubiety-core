@@ -8,6 +8,7 @@
 import {
   HemisphereLight,
   DirectionalLight,
+  SpotLight,
   Vector2,
   PlaneBufferGeometry,
   ShadowMaterial,
@@ -43,6 +44,7 @@ export default class Theme {
     const { lights } = this.settings;
     const hemi = lights.filter((light) => light.id === "hemi");
     const directional = lights.filter((light) => light.id === "directional");
+    const spot = lights.filter((light) => light.id === "spot");
 
     hemi.forEach((light) => {
       const { x, y, z } = light.position;
@@ -78,6 +80,13 @@ export default class Theme {
       directionalLight.shadow.camera.bottom = d * -1;
 
       this.lights.push(directionalLight);
+    });
+
+    spot.forEach((light) => {
+      const { x, y, z } = light.position;
+      const spotLight = new SpotLight(light.color, light.intensity);
+      spotLight.position.set(x, y, z);
+      this.lights.push(spotLight);
     });
   }
 

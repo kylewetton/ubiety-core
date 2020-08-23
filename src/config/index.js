@@ -96,6 +96,60 @@ export const defaultTheme = {
   },
 };
 
+const spotlightIntensity = 10;
+const spotlightDistance = 10;
+const spotlightHeightReduction = 2; // Higher value means less "AO"
+const spotlightHeight = spotlightDistance - spotlightHeightReduction;
+
+export const spotlightTheme = {
+  lights: [
+    {
+      id: "hemi",
+      sky: 0xffffff,
+      ground: 0xffffff,
+      intensity: 0.75,
+      position: { x: 0, y: 50, z: 0 },
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: 0, y: spotlightDistance + spotlightHeightReduction, z: 0 },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: spotlightDistance, y: spotlightHeight, z: 0 },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: spotlightDistance * -1, y: spotlightHeight, z: 0 },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: 0, y: spotlightHeight, z: spotlightDistance },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: 0, y: spotlightHeight, z: spotlightDistance * -1 },
+      intensity: spotlightIntensity,
+    },
+  ],
+  floor: {
+    color: "#333333",
+    depth: 20,
+    shadowOnly: true,
+    shininess: 1,
+    shadowOpacity: 0.2,
+  },
+};
+
 /**
  * Flash material
  */
