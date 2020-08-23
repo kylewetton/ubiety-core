@@ -6,6 +6,9 @@
  */
 
 import _ from "lodash";
+import { tween } from "shifty";
+import { Math as ThreeMath } from "three";
+
 import { isElement, exists } from "./utils/error";
 import { defaults } from "./config";
 import {
@@ -107,6 +110,7 @@ export default class Ubiety {
       });
 
       model.position.y += this.settings.worldOffset;
+      this.model = model;
 
       this.scene.add(model);
     });
@@ -171,6 +175,7 @@ export default class Ubiety {
     this.root.appendChild(this.renderer.domElement);
     this._updateAspect();
     this._loop();
+    this._spinOnLoad();
   }
 
   /**
@@ -204,6 +209,20 @@ export default class Ubiety {
         this.setActiveSection(tag);
       }
     }
+  }
+
+  _spinOnLoad() {
+    const toDeg = ThreeMath.degToRad(360);
+    tween({
+      from: { deg: 0 },
+      to: { deg: toDeg },
+      duration: 3000,
+      easing: "swingFromTo",
+      render: (state) => {
+        this.model.rotation.y = state.deg;
+        this._render();
+      },
+    }).then(() => console.log("All done!"));
   }
 
   _render() {
