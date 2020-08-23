@@ -39,3 +39,41 @@ export const getSize = (element) => {
     return { width, height };
   }
 };
+
+/**
+ * Takes an object and an array of keys in the order the object should be in, then sorts it
+ *
+ * @param {Object|Class} object     - The object to sort
+ * @param {Array}  orderArray  - The custom order the keys should be in
+ * @param {String}  key       - The object key to sort by
+ * * @param {Boolean}  sortIndexProperty   - Use only if sorting Section Class
+ */
+
+export const sortObjectByArray = (
+  object,
+  orderArray,
+  key,
+  sortIndexProperty = false
+) => {
+  const nonSortedItems = [];
+  const sortedItems = [];
+
+  object.forEach((item) => {
+    const index = orderArray.indexOf(item[key]);
+    if (index < 0) {
+      nonSortedItems.push(item);
+    } else {
+      sortedItems[index] = item;
+    }
+  });
+
+  const sortedArray = [...sortedItems, ...nonSortedItems];
+
+  if (sortIndexProperty) {
+    sortedArray.forEach((item, i) => {
+      item.setIndex(i);
+    });
+  }
+
+  return sortedArray;
+};

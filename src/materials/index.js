@@ -15,7 +15,7 @@ const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 
 const getTexturePack = (pack, tag) => {
-  const { label, repeat, ...maps } = pack;
+  const { label, repeat, flip, ...maps } = pack;
   const path = `${TEXTURE_PATH}/${label}/`;
   const texturePack = {};
   const scale = repeat > 1 ? repeat : 1;
@@ -36,7 +36,7 @@ const getTexturePack = (pack, tag) => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
       texture.repeat.set(scale, scale);
-      if (tag === "shadow") {
+      if (flip) {
         texture.flipY = false;
       }
 

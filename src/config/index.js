@@ -1,4 +1,11 @@
-import { Math as ThreeMath } from "three";
+import {
+  Math as ThreeMath,
+  LinearToneMapping,
+  NoToneMapping,
+  ReinhardToneMapping,
+  CineonToneMapping,
+  ACESFilmicToneMapping,
+} from "three";
 
 // eslint-disable-next-line import/no-cycle
 import { color } from "../utils";
@@ -15,6 +22,7 @@ export const TEXTURE_PATH = "./public/textures";
 export const defaults = {
   initialMaterials: [],
   worldOffset: -0.33,
+  order: [],
 };
 
 /**
@@ -26,8 +34,8 @@ export const engineConfig = {
   },
   cameraSettings: {
     fov: 40,
-    near: 0.1,
-    far: 500,
+    near: 1,
+    far: 300,
     position: { x: -3, y: 0.5, z: 3 },
   },
   rendererSettings: {
@@ -35,6 +43,7 @@ export const engineConfig = {
       antialias: true,
     },
     gammaFactor: 2.2,
+    toneMapping: LinearToneMapping,
   },
   controlSettings: {
     enableDampening: true,

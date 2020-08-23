@@ -9,6 +9,16 @@ import _ from "lodash";
 import { tween } from "shifty";
 import { Math as ThreeMath } from "three";
 
+/**
+ * Post processing
+ */
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { SSAOPass } from "three/examples/jsm/postprocessing/SSAOPass";
+
+import Stats from "three/examples/jsm/libs/stats.module";
+import { GUI } from "three/examples/jsm/libs/dat.gui.module";
+
 import { isElement, exists } from "./utils/error";
 import { defaults } from "./config";
 import {
@@ -22,7 +32,7 @@ import {
   theme,
 } from "./engine";
 
-import { getSize } from "./utils";
+import { getSize, sortObjectByArray } from "./utils";
 import Section from "./sections";
 
 /**
@@ -68,12 +78,31 @@ export default class Ubiety {
     this._loop = this._loop.bind(this);
 
     /**
+     * Post Processing
+     * */
+
+    this.addSSAO = false;
+    this.effectComposer = new EffectComposer(this.renderer);
+    this.renderPass = new RenderPass(this.scene, this.camera);
+    this.effectPass = new SSAOPass(this.scene, this.camera);
+
+    /**
+     * Debugging
+     * */
+
+    this.debug = false;
+    this.stats = new Stats();
+    this.gui = null;
+    this.renderInLoop = false;
+    /**
      * State
      * */
 
     this.model = null;
     this.sections = [];
+    this.activeSection = null;
     this.mouse = { x: 0, y: 0 };
+    this.ui = {};
   }
 
   /**
@@ -83,9 +112,21 @@ export default class Ubiety {
   mount() {
     this._createEvents();
 
+    // sortObjectByArray
+
+    if (this.debug) {
+      this.gui = new GUI();
+      document.body.appendChild(this.stats.dom);
+      this.gui.add(this.effectPass, "kernelRadius").min(0).max(32);
+      this.gui.add(this.effectPass, "minDistance").min(0.001).max(0.02);
+      this.gui.add(this.effectPass, "maxDistance").min(0.01).max(0.3);
+    }
+
     this.gltfLoader.load(this.modelPath, (gltf) => {
       const { scene: model } = gltf;
+      const unorderedSections = [];
 
+      let idx = 0;
       model.traverse((o) => {
         if (o.isMesh) {
           o.castShadow = true;
@@ -98,16 +139,28 @@ export default class Ubiety {
             (material) => material.tag === o.name
           );
 
-          const section = new Section(o, this);
+          const section = new Section(o, idx, this);
           section.updateMaterial(materialSettings[0]);
 
-          if (o.name === "base") {
+          if (o.name === this.settings.order[0] || idx === 0) {
             section.setActive(true);
+            this.activeSection = section;
           }
 
-          this.sections.push(section);
+          unorderedSections.push(section);
+          if (section.isEnabled()) {
+            // eslint-disable-next-line no-plusplus
+            idx++;
+          }
         }
       });
+
+      this.sections = sortObjectByArray(
+        unorderedSections,
+        this.settings.order,
+        "tag",
+        true
+      );
 
       model.position.y += this.settings.worldOffset;
       this.model = model;
@@ -117,6 +170,7 @@ export default class Ubiety {
 
     this.modelManager.onLoad = () => {
       this._buildEngine();
+      this._buildCoreUI();
     };
   }
 
@@ -161,21 +215,32 @@ export default class Ubiety {
     );
 
     this.controls.addEventListener("change", () => {
-      this.renderer.render(this.scene, this.camera);
+      if (!this.renderInLoop) {
+        this._render();
+      }
     });
   }
 
   _buildEngine() {
-    const { lights, floor } = theme;
-
+    const { lights } = theme;
+    const { width, height } = getSize(this.root);
     lights.forEach((light) => this.scene.add(light));
-    floor.position.y += this.settings.worldOffset;
-    // this.scene.add(floor);
 
     this.root.appendChild(this.renderer.domElement);
+    this.effectComposer.addPass(this.renderPass);
+    this.effectPass.setSize(width, height);
+    this.effectPass.kernelRadius = 10;
+    this.effectPass.minDistance = 0.5;
+    this.effectPass.maxDistance = 1;
+    if (this.addSSAO) this.effectComposer.addPass(this.effectPass);
     this._updateAspect();
+
     this._loop();
     this._spinOnLoad();
+  }
+
+  _buildCoreUI() {
+    this._renderSectionSelector();
   }
 
   /**
@@ -186,8 +251,9 @@ export default class Ubiety {
     const { width, height } = getSize(this.root);
     this.camera.aspect = width / height;
     this.renderer.setSize(width, height);
+    this.effectComposer.setSize(width, height);
     this.camera.updateProjectionMatrix();
-    this.renderer.render(this.scene, this.camera);
+    this._render();
   }
 
   _updateMousePosition(evt) {
@@ -220,17 +286,28 @@ export default class Ubiety {
       easing: "swingFromTo",
       render: (state) => {
         this.model.rotation.y = state.deg;
-        this._render();
+        if (!this.renderInLoop) {
+          this._render();
+        }
       },
     }).then(() => console.log("All done!"));
   }
 
   _render() {
-    this.renderer.render(this.scene, this.camera);
+    if (this.debug) {
+      this.stats.begin();
+      this.effectComposer.render();
+      this.stats.end();
+    } else {
+      this.effectComposer.render();
+    }
   }
 
   _loop() {
     requestAnimationFrame(this._loop);
+    if (this.renderInLoop) {
+      this._render();
+    }
     this.controls.update();
   }
 
@@ -249,11 +326,60 @@ export default class Ubiety {
       if (tag === section.tag && !section.isDisabled()) {
         section.setActive(true);
         section.flash(this);
+        this.activeSection = section;
+        this._updateSectionSelector();
       } else {
         section.setActive(false);
       }
       return section;
     });
     this.sections = updateSections;
+  }
+
+  /**
+   * UI Rendering
+   * */
+
+  _renderSectionSelector() {
+    const availableSections = this.sections.filter((section) =>
+      section.isEnabled()
+    );
+
+    this.ui.sectionCount = availableSections.length;
+
+    /** Nodes */
+    const uiSelectorWrapper = document.createElement("section");
+    const uiSelectorColLeft = document.createElement("div");
+    const uiSelectorColRight = document.createElement("div");
+    const uiSelectorTitle = document.createElement("h2");
+    const uiBreadcrumb = document.createElement("span");
+
+    /** Classes */
+    uiSelectorWrapper.classList.add("ubiety__wrapper");
+    uiSelectorColLeft.classList.add("ubiety__col");
+    uiSelectorColRight.classList.add("ubiety__col");
+    uiSelectorTitle.classList.add("ubiety__selector-title");
+    uiBreadcrumb.classList.add("ubiety__breadcrumb");
+
+    /** Store */
+
+    this.ui.selectorTitle = uiSelectorTitle;
+    this.ui.breadcrumb = uiBreadcrumb;
+
+    /** Sort */
+    uiSelectorColLeft.appendChild(this.ui.breadcrumb);
+    uiSelectorColLeft.appendChild(this.ui.selectorTitle);
+    uiSelectorWrapper.appendChild(uiSelectorColLeft);
+    uiSelectorWrapper.appendChild(uiSelectorColRight);
+
+    this.root.appendChild(uiSelectorWrapper);
+    this._updateSectionSelector();
+  }
+
+  _updateSectionSelector() {
+    this.ui.selectorTitle.innerHTML = this.activeSection.getNameAsLabel();
+    this.ui.breadcrumb.innerHTML = `${this.activeSection.index + 1}/${
+      this.ui.sectionCount
+    }`;
   }
 }

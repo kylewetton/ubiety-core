@@ -5,6 +5,7 @@
  * @copyright Kyle Wetton. All rights reserved.
  */
 
+import _ from "lodash";
 import { exists } from "../utils/error";
 import getNewMaterial from "../materials";
 import { flashSettings } from "../config";
@@ -16,11 +17,13 @@ export default class Section {
    * @throws {Error} When the mesh doesn't exist.
    *
    * @param {Object}          mesh       - A mesh loaded from the gLTF file.
+   * @param {Number}          index     - Index in sections array
    * @param {Object}          Class    - Parent Ubiety Class
    */
-  constructor(mesh, globalParent) {
+  constructor(mesh, index, globalParent) {
     this.mesh = exists(mesh, "A Section class needs a mesh to construct. ");
     this.tag = mesh.name;
+    this.index = index;
     this.active = false;
     this.currentMaterial = null;
     this.flashMaterial = flashSettings.material;
@@ -57,5 +60,32 @@ export default class Section {
 
   isDisabled() {
     return this.mesh.disabled;
+  }
+
+  isEnabled() {
+    return !this.mesh.disabled;
+  }
+
+  getTag() {
+    return this.mesh.name;
+  }
+
+  getNameAsLabel() {
+    const nameArray = this.mesh.name.split("_");
+    const label = nameArray.join(" ");
+    return _.startCase(label);
+  }
+
+  getCurrentMaterialName() {
+    return this.currentMaterial.name;
+  }
+
+  getIndex() {
+    return this.index;
+  }
+
+  setIndex(idx) {
+    this.index = idx;
+    console.log(this.index);
   }
 }

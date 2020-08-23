@@ -52,7 +52,8 @@ export const getNewCamera = (fov = fovDef, near = nearDef, far = farDef) => {
  * RENDERER
  */
 
-const { gammaFactor } = engineConfig.rendererSettings;
+const { gammaFactor, toneMapping } = engineConfig.rendererSettings;
+const pixelRatio = window.devicePixelRatio > 2 ? 2 : window.devicePixelRatio;
 export const getNewRenderer = () => {
   const rendererInstance = new WebGLRenderer({
     ...engineConfig.rendererSettings.constructor,
@@ -61,6 +62,8 @@ export const getNewRenderer = () => {
   rendererInstance.outputEncoding = GammaEncoding;
   rendererInstance.physicallyCorrectLights = true;
   rendererInstance.powerPreference = "high-performance";
+  rendererInstance.setPixelRatio(pixelRatio);
+  rendererInstance.toneMapping = toneMapping;
   return rendererInstance;
 };
 
