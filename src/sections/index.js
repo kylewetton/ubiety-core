@@ -86,6 +86,5 @@ export default class Section {
 
   setIndex(idx) {
     this.index = idx;
-    console.log(this.index);
   }
 }

@@ -323,7 +323,7 @@ export default class Ubiety {
 
   setActiveSection(tag) {
     const updateSections = this.sections.map((section) => {
-      if (tag === section.tag && !section.isDisabled()) {
+      if (tag === section.tag && section.isEnabled()) {
         section.setActive(true);
         section.flash(this);
         this.activeSection = section;
@@ -334,6 +334,33 @@ export default class Ubiety {
       return section;
     });
     this.sections = updateSections;
+  }
+
+  nextSection() {
+    this._jumpSection();
+  }
+
+  prevSection() {
+    this._jumpSection(-1);
+  }
+
+  _jumpSection(modifier = 1) {
+    const availableSections = this.sections.filter((section) =>
+      section.isEnabled()
+    );
+    const currentIndex = this.activeSection.getIndex();
+    let next = availableSections.filter(
+      (section) => section.index === currentIndex + modifier
+    )[0];
+    if (!next) {
+      if (modifier === 1) {
+        // eslint-disable-next-line prefer-destructuring
+        next = availableSections[0];
+      } else {
+        next = availableSections[availableSections.length - 1];
+      }
+    }
+    this.setActiveSection(next.getTag());
   }
 
   /**
@@ -353,22 +380,42 @@ export default class Ubiety {
     const uiSelectorColRight = document.createElement("div");
     const uiSelectorTitle = document.createElement("h2");
     const uiBreadcrumb = document.createElement("span");
+    const uiNextSection = document.createElement("button");
+    const uiPrevSection = document.createElement("button");
 
     /** Classes */
-    uiSelectorWrapper.classList.add("ubiety__wrapper");
+    uiSelectorWrapper.classList.add("ubiety__section-selector");
     uiSelectorColLeft.classList.add("ubiety__col");
     uiSelectorColRight.classList.add("ubiety__col");
     uiSelectorTitle.classList.add("ubiety__selector-title");
     uiBreadcrumb.classList.add("ubiety__breadcrumb");
+    uiNextSection.classList.add("ubiety__next-section");
+    uiPrevSection.classList.add("ubiety__prev-section");
+    uiNextSection.classList.add("ubiety__jump-section");
+    uiPrevSection.classList.add("ubiety__jump-section");
 
     /** Store */
-
     this.ui.selectorTitle = uiSelectorTitle;
     this.ui.breadcrumb = uiBreadcrumb;
+
+    uiNextSection.innerHTML = `<i class="icon-next"></i>`;
+    uiPrevSection.innerHTML = `<i class="icon-prev"></i>`;
+
+    /** Events */
+
+    uiNextSection.addEventListener("click", () => {
+      this.nextSection();
+    });
+
+    uiPrevSection.addEventListener("click", () => {
+      this.prevSection();
+    });
 
     /** Sort */
     uiSelectorColLeft.appendChild(this.ui.breadcrumb);
     uiSelectorColLeft.appendChild(this.ui.selectorTitle);
+    uiSelectorColRight.appendChild(uiPrevSection);
+    uiSelectorColRight.appendChild(uiNextSection);
     uiSelectorWrapper.appendChild(uiSelectorColLeft);
     uiSelectorWrapper.appendChild(uiSelectorColRight);
 
