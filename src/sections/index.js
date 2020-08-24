@@ -29,19 +29,31 @@ export default class Section {
     this.flashMaterial = flashSettings.material;
     this.previousSettings = {};
     this.globalParent = globalParent;
+    this.children = [];
+    this.disabled = mesh.disabled;
+    this.isChild = false;
   }
 
   updateMaterial(settings) {
     const material = getNewMaterial(settings, this.globalParent);
     this.currentMaterial = material;
     this.mesh.material = material;
+    this.children.forEach((child) => {
+      child.setMaterialDirectly(material);
+    });
   }
 
   flash(globalParent) {
     this.mesh.material = this.flashMaterial;
+    this.children.forEach((child) => {
+      child.setMaterialDirectly(this.flashMaterial);
+    });
     globalParent._render();
     setTimeout(() => {
       this.mesh.material = this.currentMaterial;
+      this.children.forEach((child) => {
+        child.setMaterialDirectly(this.currentMaterial);
+      });
       globalParent._render();
     }, flashSettings.speed);
   }
@@ -59,15 +71,28 @@ export default class Section {
   }
 
   isDisabled() {
-    return this.mesh.disabled;
+    return this.disabled;
   }
 
   isEnabled() {
-    return !this.mesh.disabled;
+    return !this.disabled;
+  }
+
+  setAbility(state) {
+    this.disabled = state;
+  }
+
+  setAsChild(parentTag) {
+    this.child = true;
+    this.parent = parentTag;
   }
 
   getTag() {
     return this.mesh.name;
+  }
+
+  setMaterialDirectly(material) {
+    this.mesh.material = material;
   }
 
   getNameAsLabel() {

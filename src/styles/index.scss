@@ -1,5 +1,110 @@
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
+html,
 body,
-html {
+p,
+ol,
+ul,
+li,
+dl,
+dt,
+dd,
+blockquote,
+figure,
+fieldset,
+legend,
+textarea,
+pre,
+iframe,
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+ul {
+  list-style: none;
+}
+button,
+input,
+select,
+textarea {
+  margin: 0;
+}
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/**
+* Ubiety Core Styling
+*/
+
+.ubiety {
+  &__section-selector {
+    position: absolute;
+    bottom: 4rem;
+    left: 2rem;
+    z-index: 2;
+    display: flex;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  &__breadcrumb {
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  &__selector-title {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 4rem;
+  }
+  &__col--left {
+    padding: 5px 12px 8px 12px;
+    background: #ffffff;
+    display: flex;
+  }
+  &__col--right {
+    display: flex;
+  }
+  &__jump-section,
+  &__section-menu {
+    background: white;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 1px;
+    width: 3rem;
+    i {
+      height: 15px;
+    }
+    i.icon-menu {
+      height: 21px;
+    }
+    .icon-prev {
+      transform: rotate(180deg);
+    }
+  }
+  &__section-menu {
+    width: auto;
+    margin-right: 1rem;
+  }
 }

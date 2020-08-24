@@ -8,6 +8,7 @@
 import _ from "lodash";
 import { tween } from "shifty";
 import { Math as ThreeMath } from "three";
+import "./styles/index.scss";
 
 /**
  * Post processing
@@ -20,7 +21,7 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import { GUI } from "three/examples/jsm/libs/dat.gui.module";
 
 import { isElement, exists } from "./utils/error";
-import { defaults } from "./config";
+import { defaults, icons } from "./config";
 import {
   getNewScene,
   getNewRenderer,
@@ -129,28 +130,42 @@ export default class Ubiety {
       let idx = 0;
       model.traverse((o) => {
         if (o.isMesh) {
-          o.castShadow = true;
-          o.receiveShadow = true;
-          const name = o.name.split("|");
-          o.name = name[0];
-          o.disabled = name[1] === "disable";
+          if (!this.settings.groups.includes(o.parent.name)) {
+            o.castShadow = true;
+            o.receiveShadow = true;
+            const name = o.name.split("|");
+            o.name = name[0];
+            o.disabled = name[1] === "disable";
 
-          const materialSettings = this.settings.initialMaterials.filter(
-            (material) => material.tag === o.name
-          );
+            const materialSettings = this.settings.initialMaterials.filter(
+              (material) => material.tag === o.name
+            )[0];
 
-          const section = new Section(o, idx, this);
-          section.updateMaterial(materialSettings[0]);
+            const section = new Section(o, idx, this);
 
-          if (o.name === this.settings.order[0] || idx === 0) {
-            section.setActive(true);
-            this.activeSection = section;
-          }
+            /** Children */
 
-          unorderedSections.push(section);
-          if (section.isEnabled()) {
-            // eslint-disable-next-line no-plusplus
-            idx++;
+            if (this.settings.groups.includes(o.name)) {
+              section.mesh.children.forEach((child, i) => {
+                const childSection = new Section(child, i, this);
+                childSection.setAsChild(o.name);
+                childSection.setAbility(o.disabled);
+                section.children.push(childSection);
+              });
+            }
+
+            if (o.name === this.settings.order[0] || idx === 0) {
+              section.setActive(true);
+              this.activeSection = section;
+            }
+
+            section.updateMaterial(materialSettings);
+
+            unorderedSections.push(section);
+            if (section.isEnabled()) {
+              // eslint-disable-next-line no-plusplus
+              idx++;
+            }
           }
         }
       });
@@ -270,7 +285,8 @@ export default class Ubiety {
     );
     if (intersects.length) {
       const { object } = intersects[0];
-      const tag = object.name;
+      const isChild = this.settings.groups.includes(object.parent.name);
+      const tag = isChild ? object.parent.name : object.name;
       if (tag) {
         this.setActiveSection(tag);
       }
@@ -379,27 +395,29 @@ export default class Ubiety {
     const uiSelectorColLeft = document.createElement("div");
     const uiSelectorColRight = document.createElement("div");
     const uiSelectorTitle = document.createElement("h2");
+    const uiCurrentSection = document.createElement("div");
     const uiBreadcrumb = document.createElement("span");
+    const uiSectionMenu = document.createElement("button");
     const uiNextSection = document.createElement("button");
     const uiPrevSection = document.createElement("button");
 
     /** Classes */
     uiSelectorWrapper.classList.add("ubiety__section-selector");
-    uiSelectorColLeft.classList.add("ubiety__col");
-    uiSelectorColRight.classList.add("ubiety__col");
+    uiSelectorColLeft.classList.add("ubiety__col", "ubiety__col--left");
+    uiSectionMenu.classList.add("ubiety__section-menu");
+    uiSelectorColRight.classList.add("ubiety__col", "ubiety__col--right");
     uiSelectorTitle.classList.add("ubiety__selector-title");
     uiBreadcrumb.classList.add("ubiety__breadcrumb");
-    uiNextSection.classList.add("ubiety__next-section");
-    uiPrevSection.classList.add("ubiety__prev-section");
-    uiNextSection.classList.add("ubiety__jump-section");
-    uiPrevSection.classList.add("ubiety__jump-section");
+    uiNextSection.classList.add("ubiety__next-section", "ubiety__jump-section");
+    uiPrevSection.classList.add("ubiety__prev-section", "ubiety__jump-section");
 
     /** Store */
     this.ui.selectorTitle = uiSelectorTitle;
     this.ui.breadcrumb = uiBreadcrumb;
 
-    uiNextSection.innerHTML = `<i class="icon-next"></i>`;
-    uiPrevSection.innerHTML = `<i class="icon-prev"></i>`;
+    uiNextSection.innerHTML = `<i class="icon-next">${icons.right}</i>`;
+    uiPrevSection.innerHTML = `<i class="icon-prev">${icons.right}</i>`;
+    uiSectionMenu.innerHTML = `<i class="icon-menu">${icons.menu}</i>`;
 
     /** Events */
 
@@ -412,10 +430,15 @@ export default class Ubiety {
     });
 
     /** Sort */
-    uiSelectorColLeft.appendChild(this.ui.breadcrumb);
-    uiSelectorColLeft.appendChild(this.ui.selectorTitle);
+
+    uiCurrentSection.appendChild(this.ui.breadcrumb);
+    uiCurrentSection.appendChild(this.ui.selectorTitle);
+    uiSelectorColLeft.appendChild(uiSectionMenu);
+    uiSelectorColLeft.appendChild(uiCurrentSection);
+
     uiSelectorColRight.appendChild(uiPrevSection);
     uiSelectorColRight.appendChild(uiNextSection);
+
     uiSelectorWrapper.appendChild(uiSelectorColLeft);
     uiSelectorWrapper.appendChild(uiSelectorColRight);
 
@@ -425,8 +448,15 @@ export default class Ubiety {
 
   _updateSectionSelector() {
     this.ui.selectorTitle.innerHTML = this.activeSection.getNameAsLabel();
-    this.ui.breadcrumb.innerHTML = `${this.activeSection.index + 1}/${
+    this.ui.breadcrumb.innerHTML = `${this.activeSection.index + 1} / ${
       this.ui.sectionCount
     }`;
+  }
+
+  log() {
+    const foxing = this.sections.filter(
+      (section) => section.getTag() === "foxing"
+    )[0];
+    console.log(foxing);
   }
 }

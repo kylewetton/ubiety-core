@@ -36,6 +36,7 @@ const getTexturePack = (pack, tag) => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
       texture.repeat.set(scale, scale);
+
       if (flip) {
         texture.flipY = false;
       }
