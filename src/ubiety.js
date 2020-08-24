@@ -131,8 +131,6 @@ export default class Ubiety {
       model.traverse((o) => {
         if (o.isMesh) {
           if (!this.settings.groups.includes(o.parent.name)) {
-            o.castShadow = true;
-            o.receiveShadow = true;
             const name = o.name.split("|");
             o.name = name[0];
             o.disabled = name[1] === "disable";
@@ -150,6 +148,9 @@ export default class Ubiety {
                 const childSection = new Section(child, i, this);
                 childSection.setAsChild(o.name);
                 childSection.setAbility(o.disabled);
+                childSection.setPersistentTexture(
+                  this._getPersistentTexture(childSection.getTag())
+                );
                 section.children.push(childSection);
               });
             }
@@ -158,6 +159,12 @@ export default class Ubiety {
               section.setActive(true);
               this.activeSection = section;
             }
+
+            /** Set persistent Texture */
+
+            section.setPersistentTexture(
+              this._getPersistentTexture(section.getTag())
+            );
 
             section.updateMaterial(materialSettings);
 
@@ -256,6 +263,14 @@ export default class Ubiety {
 
   _buildCoreUI() {
     this._renderSectionSelector();
+  }
+
+  _getPersistentTexture(tag) {
+    const pTexture = this.settings.persistentTextures.filter(
+      (texture) => texture.tag === tag
+    )[0];
+
+    return pTexture || {};
   }
 
   /**

@@ -32,14 +32,19 @@ export default class Section {
     this.children = [];
     this.disabled = mesh.disabled;
     this.isChild = false;
+    this.persistentTexture = {};
   }
 
   updateMaterial(settings) {
-    const material = getNewMaterial(settings, this.globalParent);
+    const material = getNewMaterial(
+      settings,
+      this.persistentTexture,
+      this.globalParent
+    );
     this.currentMaterial = material;
     this.mesh.material = material;
     this.children.forEach((child) => {
-      child.setMaterialDirectly(material);
+      child.updateMaterial(settings);
     });
   }
 
@@ -52,7 +57,7 @@ export default class Section {
     setTimeout(() => {
       this.mesh.material = this.currentMaterial;
       this.children.forEach((child) => {
-        child.setMaterialDirectly(this.currentMaterial);
+        child.setMaterialDirectly(child.currentMaterial);
       });
       globalParent._render();
     }, flashSettings.speed);
@@ -83,7 +88,7 @@ export default class Section {
   }
 
   setAsChild(parentTag) {
-    this.child = true;
+    this.isChild = true;
     this.parent = parentTag;
   }
 
@@ -111,5 +116,9 @@ export default class Section {
 
   setIndex(idx) {
     this.index = idx;
+  }
+
+  setPersistentTexture(texture) {
+    this.persistentTexture = texture;
   }
 }

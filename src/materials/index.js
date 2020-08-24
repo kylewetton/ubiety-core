@@ -5,7 +5,7 @@ import {
   LoadingManager,
   TextureLoader,
   RepeatWrapping,
-  TextureDataType,
+  Color,
 } from "three";
 import _ from "lodash";
 import { color } from "../utils";
@@ -14,11 +14,12 @@ import { TEXTURE_PATH } from "../config";
 const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 
-const getTexturePack = (pack, tag) => {
+const getTexturePack = (pack) => {
   const { label, repeat, flip, ...maps } = pack;
   const path = `${TEXTURE_PATH}/${label}/`;
   const texturePack = {};
   const scale = repeat > 1 ? repeat : 1;
+  console.log(label);
   /**
    * Dict renames the values to spread maps into material
    */
@@ -48,7 +49,7 @@ const getTexturePack = (pack, tag) => {
   return texturePack;
 };
 
-const getNewMaterial = (options = {}, globalParent) => {
+const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
   const r = `${TEXTURE_PATH}/cubemap/`;
   const urls = [
     `${r}px.png`,
@@ -68,11 +69,6 @@ const getNewMaterial = (options = {}, globalParent) => {
       ? null
       : new CubeTextureLoader(textureLoadManager).load(urls);
 
-  const textures =
-    options.type !== "texture"
-      ? null
-      : getTexturePack(options.texture, options.tag);
-
   const defaults = {
     type: "phong",
     color: "#F1F1F1",
@@ -85,10 +81,23 @@ const getNewMaterial = (options = {}, globalParent) => {
     envMapIntensity: 1.5,
   };
 
-  const settings = _.defaultsDeep(options, defaults);
+  // hasOwnProperty hack
+  const { tag: noPersistenceTag, ...persistence } = persistentTexture || {
+    tag: "!",
+  };
 
-  const linearColor = color(settings.color);
-  settings.color = linearColor;
+  const preSettings = _.defaultsDeep(options, defaults);
+  const settings = _.defaultsDeep(persistence, preSettings);
+
+  if (!(settings.color instanceof Color)) {
+    const linearColor = color(settings.color);
+    settings.color = linearColor;
+  }
+
+  const textures =
+    settings.type !== "texture"
+      ? null
+      : getTexturePack(settings.texture, settings.tag);
 
   /**
    * Use spread to exclude the settings

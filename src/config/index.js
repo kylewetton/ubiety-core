@@ -24,6 +24,7 @@ export const defaults = {
   worldOffset: -0.33,
   order: [],
   groups: [],
+  persistentTextures: [],
 };
 
 /**
