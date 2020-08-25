@@ -111,6 +111,8 @@ export default class Ubiety {
    * */
 
   mount() {
+    this.root.style.cssText += `height: 100%; position: relative`;
+
     this._createEvents();
 
     // sortObjectByArray

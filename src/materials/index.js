@@ -15,11 +15,11 @@ const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 
 const getTexturePack = (pack) => {
-  const { label, repeat, flip, ...maps } = pack;
+  const { label, repeat, flip, url, ...maps } = pack;
   const path = `${TEXTURE_PATH}/${label}/`;
-  const texturePack = {};
   const scale = repeat > 1 ? repeat : 1;
-  console.log(label);
+  const texturePack = {};
+
   /**
    * Dict renames the values to spread maps into material
    */
@@ -31,12 +31,22 @@ const getTexturePack = (pack) => {
     alpha: "alphaMap",
   };
 
+  // if (url) {
+  //   maps.color = url;
+  // }
+
   _.forOwn(maps, function (value, key) {
     if (value) {
-      const texture = textureLoader.load(`${path}${key}.jpg`);
+      let texture;
+      if (key === "color" && url) {
+        texture = textureLoader.load(url);
+        texture.repeat.set(1, 1);
+      } else {
+        texture = textureLoader.load(`${path}${key}.jpg`);
+        texture.repeat.set(scale, scale);
+      }
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(scale, scale);
 
       if (flip) {
         texture.flipY = false;
@@ -45,6 +55,9 @@ const getTexturePack = (pack) => {
       texturePack[dict[key]] = texture;
     }
   });
+  if (url) {
+    console.log(texturePack);
+  }
 
   return texturePack;
 };
