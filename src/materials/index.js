@@ -31,10 +31,6 @@ const getTexturePack = (pack) => {
     alpha: "alphaMap",
   };
 
-  // if (url) {
-  //   maps.color = url;
-  // }
-
   _.forOwn(maps, function (value, key) {
     if (value) {
       let texture;
