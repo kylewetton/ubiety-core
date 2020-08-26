@@ -6,8 +6,10 @@
  */
 
 import _ from "lodash";
+import { tween } from "shifty";
 import { exists } from "../utils/error";
-import getNewMaterial from "../materials";
+
+import Material from "../materials/Material";
 import { flashSettings } from "../config";
 
 export default class Section {
@@ -26,6 +28,7 @@ export default class Section {
     this.index = index;
     this.active = false;
     this.currentMaterial = null;
+    this.currentMaterialId = null;
     this.flashMaterial = flashSettings.material;
     this.previousSettings = {};
     this.globalParent = globalParent;
@@ -35,32 +38,54 @@ export default class Section {
     this.persistentTexture = {};
   }
 
-  updateMaterial(settings) {
-    const material = getNewMaterial(
-      settings,
-      this.persistentTexture,
-      this.globalParent
-    );
+  updateMaterial(materialSettings) {
+    const settings = _.has(materialSettings, "material")
+      ? materialSettings.material
+      : materialSettings;
+
+    const material = new Material(settings, this.tag, this.globalParent);
+
     this.currentMaterial = material;
-    this.mesh.material = material;
+    this.mesh.material = material.apply();
+
     this.children.forEach((child) => {
-      child.updateMaterial(settings);
+      child.updateMaterial(materialSettings);
     });
   }
 
-  flash(globalParent) {
-    this.mesh.material = this.flashMaterial;
-    this.children.forEach((child) => {
-      child.setMaterialDirectly(this.flashMaterial);
+  swapColor(hex) {
+    this.currentMaterial.swapColor(hex);
+    this.children.forEach((child) => child.swapColor(hex));
+  }
+
+  swapTexture(txt) {
+    this.currentMaterial.swapTexture(txt);
+    this.children.forEach((child) => child.swapTexture(txt));
+  }
+
+  flash() {
+    const { color } = flashSettings;
+    const currentColor = this.currentMaterial.settings.color;
+
+    tween({
+      from: { hex: currentColor },
+      to: { hex: color },
+      duration: flashSettings.speed / 2,
+      step: (state) => {
+        this.swapColor(state.hex);
+        this.globalParent._render();
+      },
     });
-    globalParent._render();
-    setTimeout(() => {
-      this.mesh.material = this.currentMaterial;
-      this.children.forEach((child) => {
-        child.setMaterialDirectly(child.currentMaterial);
-      });
-      globalParent._render();
-    }, flashSettings.speed);
+    tween({
+      to: { hex: currentColor },
+      from: { hex: color },
+      duration: flashSettings.speed / 2,
+      delay: flashSettings.speed / 2,
+      step: (state) => {
+        this.swapColor(state.hex);
+        this.globalParent._render();
+      },
+    });
   }
 
   setActive(state) {

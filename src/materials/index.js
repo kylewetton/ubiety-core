@@ -95,8 +95,8 @@ const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
     tag: "!",
   };
 
-  const preSettings = _.defaultsDeep(options, defaults);
-  const settings = _.defaultsDeep(persistence, preSettings);
+  const preSettings = _.defaultsDeep({}, options, defaults);
+  const settings = _.defaultsDeep({}, persistence, preSettings);
 
   if (!(settings.color instanceof Color)) {
     const linearColor = color(settings.color);

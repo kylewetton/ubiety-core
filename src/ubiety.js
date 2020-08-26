@@ -63,7 +63,7 @@ export default class Ubiety {
 
     this.modelPath = exists(modelPath, "Please provide a path to the model.");
 
-    this.settings = _.defaultsDeep(settings, defaults);
+    this.settings = _.defaultsDeep({}, settings, defaults);
 
     /**
      * Constructor: Engine parts
@@ -104,6 +104,7 @@ export default class Ubiety {
     this.activeSection = null;
     this.mouse = { x: 0, y: 0 };
     this.ui = {};
+    this.materials = {};
   }
 
   /**
@@ -150,9 +151,6 @@ export default class Ubiety {
                 const childSection = new Section(child, i, this);
                 childSection.setAsChild(o.name);
                 childSection.setAbility(o.disabled);
-                childSection.setPersistentTexture(
-                  this._getPersistentTexture(childSection.getTag())
-                );
                 section.children.push(childSection);
               });
             }
@@ -164,11 +162,7 @@ export default class Ubiety {
 
             /** Set persistent Texture */
 
-            section.setPersistentTexture(
-              this._getPersistentTexture(section.getTag())
-            );
-
-            section.updateMaterial(materialSettings);
+            section.updateMaterial({ ...materialSettings });
 
             unorderedSections.push(section);
             if (section.isEnabled()) {
@@ -323,7 +317,7 @@ export default class Ubiety {
           this._render();
         }
       },
-    }).then(() => console.log("All done!"));
+    });
   }
 
   _render() {
@@ -348,9 +342,15 @@ export default class Ubiety {
    * Actions
    */
 
-  dispatch(settings) {
+  swapColor(hex) {
     const section = this.sections.filter((s) => s.isActive())[0];
-    section.updateMaterial(settings);
+    section.swapColor(hex);
+    this._render();
+  }
+
+  swapTexture(txt) {
+    const section = this.sections.filter((s) => s.isActive())[0];
+    section.swapTexture(txt);
     this._render();
   }
 
@@ -358,7 +358,7 @@ export default class Ubiety {
     const updateSections = this.sections.map((section) => {
       if (tag === section.tag && section.isEnabled()) {
         section.setActive(true);
-        section.flash(this);
+        section.flash();
         this.activeSection = section;
         this._updateSectionSelector();
       } else {
@@ -471,9 +471,10 @@ export default class Ubiety {
   }
 
   log() {
-    const foxing = this.sections.filter(
-      (section) => section.getTag() === "foxing"
-    )[0];
-    console.log(foxing);
+    this.sections.forEach((section) => {
+      console.log(section.tag);
+      console.log(section.currentMaterial.settings);
+      console.log("_________");
+    });
   }
 }

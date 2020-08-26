@@ -10,7 +10,6 @@ import {
 // eslint-disable-next-line import/no-cycle
 import { color } from "../utils";
 // eslint-disable-next-line import/no-cycle
-import getNewMaterial from "../materials";
 
 export const APP_NAME = "Ubiety";
 export const BRAND_COLOR = "#11864a";
@@ -32,7 +31,7 @@ export const defaults = {
  */
 export const engineConfig = {
   sceneSettings: {
-    background: color("#f1f1f1"),
+    background: color("#f1f3f4"),
   },
   cameraSettings: {
     fov: 30,
@@ -109,7 +108,7 @@ export const spotlightTheme = {
       id: "hemi",
       sky: 0xffffff,
       ground: 0xffffff,
-      intensity: 0.5,
+      intensity: 0.66,
       position: { x: 0, y: 50, z: 0 },
     },
     {
@@ -157,7 +156,7 @@ export const spotlightTheme = {
  */
 
 export const flashSettings = {
-  material: getNewMaterial({ color: BRAND_COLOR }),
+  color: BRAND_COLOR,
   speed: 200,
 };
 
