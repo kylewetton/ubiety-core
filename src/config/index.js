@@ -42,6 +42,7 @@ export const engineConfig = {
   rendererSettings: {
     constructor: {
       antialias: true,
+      preserveDrawingBuffer: true,
     },
     gammaFactor: 2.2,
     toneMapping: LinearToneMapping,
@@ -51,7 +52,7 @@ export const engineConfig = {
     enableKeys: false,
     dampeningFactor: 0.2,
     rotateSpeed: 0.5,
-    minPolarAngle: ThreeMath.degToRad(5),
+    minPolarAngle: ThreeMath.degToRad(0),
     maxPolarAngle: ThreeMath.degToRad(85),
     minDistance: 0,
     maxDistance: 40,

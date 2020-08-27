@@ -105,6 +105,7 @@ export default class Ubiety {
     this.mouse = { x: 0, y: 0 };
     this.ui = {};
     this.materials = {};
+    this.events = {};
   }
 
   /**
@@ -113,8 +114,6 @@ export default class Ubiety {
 
   mount() {
     this.root.style.cssText += `height: 100%; position: relative`;
-
-    this._createEvents();
 
     // sortObjectByArray
 
@@ -126,69 +125,81 @@ export default class Ubiety {
       this.gui.add(this.effectPass, "maxDistance").min(0.01).max(0.3);
     }
 
-    this.gltfLoader.load(this.modelPath, (gltf) => {
-      const { scene: model } = gltf;
-      const unorderedSections = [];
+    this.gltfLoader.load(
+      this.modelPath,
+      (gltf) => {
+        const { scene: model } = gltf;
+        const unorderedSections = [];
 
-      let idx = 0;
-      model.traverse((o) => {
-        if (o.isMesh) {
-          if (!this.settings.groups.includes(o.parent.name)) {
-            const name = o.name.split("|");
-            o.name = name[0];
-            o.disabled = name[1] === "disable";
+        let idx = 0;
+        model.traverse((o) => {
+          if (o.isMesh) {
+            if (!this.settings.groups.includes(o.parent.name)) {
+              const name = o.name.split("|");
+              o.name = name[0];
+              o.disabled = name[1] === "disable";
 
-            const materialSettings = this.settings.initialMaterials.filter(
-              (material) => material.tag === o.name
-            )[0];
+              const materialSettings = this.settings.initialMaterials.filter(
+                (material) => material.tag === o.name
+              )[0];
 
-            const section = new Section(o, idx, this);
+              const section = new Section(o, idx, this);
 
-            /** Children */
+              /** Children */
 
-            if (this.settings.groups.includes(o.name)) {
-              section.mesh.children.forEach((child, i) => {
-                const childSection = new Section(child, i, this);
-                childSection.setAsChild(o.name);
-                childSection.setAbility(o.disabled);
-                section.children.push(childSection);
-              });
-            }
+              if (this.settings.groups.includes(o.name)) {
+                section.mesh.children.forEach((child, i) => {
+                  const childSection = new Section(child, i, this);
+                  childSection.setAsChild(o.name);
+                  childSection.setAbility(o.disabled);
+                  section.children.push(childSection);
+                });
+              }
 
-            if (o.name === this.settings.order[0] || idx === 0) {
-              section.setActive(true);
-              this.activeSection = section;
-            }
+              if (o.name === this.settings.order[0] || idx === 0) {
+                section.setActive(true);
+                this.activeSection = section;
+              }
 
-            /** Set persistent Texture */
+              /** Set persistent Texture */
 
-            section.updateMaterial({ ...materialSettings });
+              section.updateMaterial({ ...materialSettings });
 
-            unorderedSections.push(section);
-            if (section.isEnabled()) {
-              // eslint-disable-next-line no-plusplus
-              idx++;
+              unorderedSections.push(section);
+              if (section.isEnabled()) {
+                // eslint-disable-next-line no-plusplus
+                idx++;
+              }
             }
           }
-        }
-      });
+        });
 
-      this.sections = sortObjectByArray(
-        unorderedSections,
-        this.settings.order,
-        "tag",
-        true
-      );
+        this.sections = sortObjectByArray(
+          unorderedSections,
+          this.settings.order,
+          "tag",
+          true
+        );
 
-      model.position.y += this.settings.worldOffset;
-      this.model = model;
+        model.position.y += this.settings.worldOffset;
+        this.model = model;
 
-      this.scene.add(model);
-    });
+        this.scene.add(model);
+      },
+      (xhr) => {
+        document.dispatchEvent(
+          new CustomEvent("Ubiety:onProgress", {
+            detail: (xhr.loaded / xhr.total) * 100,
+          })
+        );
+      }
+    );
 
     this.modelManager.onLoad = () => {
+      this._createEvents();
       this._buildEngine();
       this._buildCoreUI();
+      document.dispatchEvent(new Event("Ubiety:onLoad"));
     };
   }
 
@@ -367,6 +378,12 @@ export default class Ubiety {
       return section;
     });
     this.sections = updateSections;
+
+    document.dispatchEvent(
+      new CustomEvent("Ubiety:sectionChange", {
+        detail: this.activeSection.tag,
+      })
+    );
   }
 
   nextSection() {
@@ -394,6 +411,48 @@ export default class Ubiety {
       }
     }
     this.setActiveSection(next.getTag());
+  }
+
+  snapshots() {
+    const positions = {
+      outer: [-3.5, 0.3, 0.5],
+      inner: [3.5, 0.3, 0.5],
+      top: [-0.5, 3, 0],
+      back: [0, 0.3, -3.5],
+      front: [0, 0.3, 3.5],
+      angle: [-2, 0.3, 2.5],
+    };
+    const poses = ["top", "outer", "back", "inner", "front", "angle"];
+
+    const link = document.createElement("a");
+
+    const takePhoto = (pose) => {
+      link.download = `${pose}.png`;
+      link.href = this.renderer.domElement.toDataURL();
+      link.click();
+    };
+
+    const move = (coords, i) => {
+      const from = { ...this.camera.position };
+      const to = { x: coords[0], y: coords[1], z: coords[2] };
+      tween({
+        from,
+        to,
+        duration: 500,
+        step: (state) => {
+          this.camera.position.set(state.x, state.y, state.z);
+        },
+      }).then(() => {
+        takePhoto(poses[i]);
+        if (i < poses.length - 1) {
+          const nextCoords = positions[poses[i + 1]];
+          move(nextCoords, i + 1);
+        }
+      });
+    };
+
+    const coords = positions[poses[0]];
+    move(coords, 0);
   }
 
   /**
