@@ -106,6 +106,7 @@ export default class Ubiety {
     this.ui = {};
     this.materials = {};
     this.events = {};
+    this.initialMaterialsLoaded = false;
   }
 
   /**
@@ -203,7 +204,6 @@ export default class Ubiety {
       this._createEvents();
       this._buildEngine();
       this._buildCoreUI();
-      document.dispatchEvent(new Event("Ubiety:onLoad"));
     };
   }
 
@@ -313,7 +313,8 @@ export default class Ubiety {
       const { object } = intersects[0];
       const isChild = this.settings.groups.includes(object.parent.name);
       const tag = isChild ? object.parent.name : object.name;
-      if (tag) {
+      const section = this.sections.filter((s) => tag === s.getTag())[0];
+      if (tag && section.isEnabled()) {
         this.setActiveSection(tag);
       }
     }
@@ -325,6 +326,7 @@ export default class Ubiety {
       from: { deg: 0 },
       to: { deg: toDeg },
       duration: 3000,
+      delay: 500,
       easing: "swingFromTo",
       render: (state) => {
         this.model.rotation.y = state.deg;
@@ -392,7 +394,7 @@ export default class Ubiety {
 
     document.dispatchEvent(
       new CustomEvent("Ubiety:sectionChange", {
-        detail: this.activeSection.tag,
+        detail: this.activeSection,
       })
     );
   }

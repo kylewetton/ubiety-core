@@ -113,6 +113,12 @@ export default class Material {
   _init() {
     if (this.globalParent) {
       textureLoadManager.onLoad = () => {
+        const firedOnLoadEvent = this.globalParent.initialMaterialsLoaded;
+        if (!firedOnLoadEvent) {
+          document.dispatchEvent(new Event("Ubiety:onLoad"));
+          this.globalParent.initialMaterialsLoaded = true;
+        }
+
         this.globalParent._render();
       };
     }

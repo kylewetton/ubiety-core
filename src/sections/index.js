@@ -28,14 +28,11 @@ export default class Section {
     this.index = index;
     this.active = false;
     this.currentMaterial = null;
-    this.currentMaterialId = null;
-    this.flashMaterial = flashSettings.material;
     this.materialAsSettings = {};
     this.globalParent = globalParent;
     this.children = [];
     this.disabled = mesh.disabled;
     this.isChild = false;
-    this.persistentTexture = {};
   }
 
   updateMaterial(materialSettings) {
