@@ -30,7 +30,7 @@ export default class Section {
     this.currentMaterial = null;
     this.currentMaterialId = null;
     this.flashMaterial = flashSettings.material;
-    this.previousSettings = {};
+    this.materialAsSettings = {};
     this.globalParent = globalParent;
     this.children = [];
     this.disabled = mesh.disabled;
@@ -43,6 +43,8 @@ export default class Section {
       ? materialSettings.material
       : materialSettings;
 
+    this.materialAsSettings = settings;
+
     const material = new Material(settings, this.tag, this.globalParent);
 
     this.currentMaterial = material;
@@ -53,9 +55,14 @@ export default class Section {
     });
   }
 
-  swapColor(hex) {
+  swapColor(hex, _updateMaterialCache = true) {
     this.currentMaterial.swapColor(hex);
-    this.children.forEach((child) => child.swapColor(hex));
+    if (_updateMaterialCache) {
+      this.materialAsSettings.color = hex;
+    }
+    this.children.forEach((child) =>
+      child.swapColor(hex, _updateMaterialCache)
+    );
   }
 
   swapTexture(txt) {
@@ -72,7 +79,7 @@ export default class Section {
       to: { hex: color },
       duration: flashSettings.speed / 2,
       step: (state) => {
-        this.swapColor(state.hex);
+        this.swapColor(state.hex, false);
         this.globalParent._render();
       },
     });
@@ -82,7 +89,7 @@ export default class Section {
       duration: flashSettings.speed / 2,
       delay: flashSettings.speed / 2,
       step: (state) => {
-        this.swapColor(state.hex);
+        this.swapColor(state.hex, false);
         this.globalParent._render();
       },
     });
@@ -125,7 +132,7 @@ export default class Section {
     this.mesh.material = material;
   }
 
-  getNameAsLabel() {
+  getTagAsLabel() {
     const nameArray = this.mesh.name.split("_");
     const label = nameArray.join(" ");
     return _.startCase(label);
@@ -133,6 +140,10 @@ export default class Section {
 
   getCurrentMaterialName() {
     return this.currentMaterial.name;
+  }
+
+  getMaterialAsSettings() {
+    return this.materialAsSettings;
   }
 
   getIndex() {

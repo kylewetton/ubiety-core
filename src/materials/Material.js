@@ -181,9 +181,9 @@ export default class Material {
   swapTexture(payload) {
     const def = defaults.texture;
     const { texture: txt, ...rest } = payload;
+
     const overrides = this._getOverrides();
     const pack = getTexturePack({ ...def, ...txt, ...overrides.texture });
-    console.log(pack);
     const newValues = { ...pack, ...rest };
     this.material.setValues({ ...newValues });
     this.material.needsUpdate = true;

@@ -156,12 +156,16 @@ export default class Ubiety {
                 });
               }
 
-              if (o.name === this.settings.order[0] || idx === 0) {
+              if (
+                this.settings.order.length &&
+                o.name === this.settings.order[0]
+              ) {
+                section.setActive(true);
+                this.activeSection = section;
+              } else if (idx === 0) {
                 section.setActive(true);
                 this.activeSection = section;
               }
-
-              /** Set persistent Texture */
 
               section.updateMaterial({ ...materialSettings });
 
@@ -365,6 +369,13 @@ export default class Ubiety {
     this._render();
   }
 
+  swapTextureBeneath(txt) {
+    const section = this.sections.filter((s) => s.isActive())[0];
+    const currentSettings = section.getMaterialAsSettings();
+    const combined = _.defaultsDeep({}, txt, currentSettings);
+    this.swapTexture(combined);
+  }
+
   setActiveSection(tag) {
     const updateSections = this.sections.map((section) => {
       if (tag === section.tag && section.isEnabled()) {
@@ -523,17 +534,11 @@ export default class Ubiety {
   }
 
   _updateSectionSelector() {
-    this.ui.selectorTitle.innerHTML = this.activeSection.getNameAsLabel();
+    this.ui.selectorTitle.innerHTML = this.activeSection.getTagAsLabel();
     this.ui.breadcrumb.innerHTML = `${this.activeSection.index + 1} / ${
       this.ui.sectionCount
     }`;
   }
 
-  log() {
-    this.sections.forEach((section) => {
-      console.log(section.tag);
-      console.log(section.currentMaterial.settings);
-      console.log("_________");
-    });
-  }
+  log() {}
 }
