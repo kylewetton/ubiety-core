@@ -194,7 +194,7 @@ export default class Ubiety {
       (xhr) => {
         document.dispatchEvent(
           new CustomEvent("Ubiety:onProgress", {
-            detail: (xhr.loaded / xhr.total) * 100,
+            detail: xhr, // (xhr.loaded / xhr.total) * 100,
           })
         );
       }
