@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> engine/index.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Ubiety.html">Ubiety</a></li></ul><h3>Classes</h3><ul><li><a href="Material.html">Material</a></li><li><a href="module-Ubiety-Ubiety.html">Ubiety</a></li><li><a href="Section.html">Section</a></li><li><a href="Theme.html">Theme</a></li></ul><h3>Global</h3><ul><li><a href="global.html#color">color</a></li><li><a href="global.html#defaults">defaults</a></li><li><a href="global.html#defaultTheme">defaultTheme</a></li><li><a href="global.html#engineConfig">engineConfig</a></li><li><a href="global.html#exists">exists</a></li><li><a href="global.html#flashSettings">flashSettings</a></li><li><a href="global.html#getGLTFLoader">getGLTFLoader</a></li><li><a href="global.html#getNewLoadingManager">getNewLoadingManager</a></li><li><a href="global.html#getNewRaycaster">getNewRaycaster</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#icons">icons</a></li><li><a href="global.html#isElement">isElement</a></li><li><a href="global.html#sortObjectByArray">sortObjectByArray</a></li><li><a href="global.html#theme">theme</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>engine/index.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * The main three.js engine objects
+ *
+ * @author    Kyle Wetton
+ * @copyright Kyle Wetton. All rights reserved.
+ */
+
+/* eslint-disable import/prefer-default-export */
+
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  LoadingManager,
+  GammaEncoding,
+  Raycaster,
+} from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import Theme from "./Theme";
+import { engineConfig, defaultTheme, spotlightTheme } from "../config";
+
+/**
+ * SCENE
+ */
+
+const { background } = engineConfig.sceneSettings;
+export const getNewScene = () => {
+  const sceneInstance = new Scene();
+  sceneInstance.background = background;
+  return sceneInstance;
+};
+
+/**
+ * CAMERA
+ */
+
+const {
+  fov: fovDef,
+  near: nearDef,
+  far: farDef,
+  position: cameraPosition,
+} = engineConfig.cameraSettings;
+export const getNewCamera = (fov = fovDef, near = nearDef, far = farDef) => {
+  const { x, y, z } = cameraPosition;
+  const cameraInstance = new PerspectiveCamera(fov, 500 / 500, near, far);
+  cameraInstance.position.set(x, y, z);
+  return cameraInstance;
+};
+
+/**
+ * RENDERER
+ */
+
+const { gammaFactor, toneMapping } = engineConfig.rendererSettings;
+const pixelRatio = window.devicePixelRatio > 2 ? 2 : window.devicePixelRatio;
+export const getNewRenderer = () => {
+  const rendererInstance = new WebGLRenderer({
+    ...engineConfig.rendererSettings.constructor,
+  });
+  rendererInstance.gammaFactor = gammaFactor;
+  rendererInstance.outputEncoding = GammaEncoding;
+  rendererInstance.physicallyCorrectLights = true;
+  rendererInstance.powerPreference = "high-performance";
+  rendererInstance.setPixelRatio(pixelRatio);
+  rendererInstance.toneMapping = toneMapping;
+  return rendererInstance;
+};
+
+/**
+ * LOADERS
+ */
+
+export const getGLTFLoader = (manager) => new GLTFLoader(manager);
+
+/**
+ * LOADING MANAGER
+ */
+
+export const getNewLoadingManager = () => {
+  return new LoadingManager();
+};
+
+/**
+ * RAYCASTER
+ */
+
+export const getNewRaycaster = () => {
+  return new Raycaster();
+};
+
+/**
+ * CONTROLS
+ */
+
+const {
+  enableDampening,
+  enableKeys,
+  dampeningFactor,
+  rotateSpeed,
+  maxPolarAngle,
+  minPolarAngle,
+  minDistance,
+  maxDistance,
+} = engineConfig.controlSettings;
+export const getNewControls = (camera, renderer) => {
+  const controlInstance = new OrbitControls(camera, renderer);
+
+  controlInstance.enableDamping = enableDampening;
+  controlInstance.enableKeys = enableKeys;
+  controlInstance.dampingFactor = dampeningFactor;
+  controlInstance.rotateSpeed = rotateSpeed;
+  controlInstance.minPolarAngle = minPolarAngle;
+  controlInstance.maxPolarAngle = maxPolarAngle;
+  controlInstance.minDistance = minDistance;
+  controlInstance.maxDistance = maxDistance;
+
+  return controlInstance;
+};
+
+/**
+ * THEME
+ */
+
+export const theme = new Theme(spotlightTheme);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

@@ -3,16 +3,23 @@
  *
  * @author    Kyle Wetton
  * @copyright Kyle Wetton. All rights reserved.
+ * @class Section
  */
 
 import _ from "lodash";
-import { tween } from "shifty";
-import { exists } from "../utils/error";
+import {
+  tween
+} from "shifty";
+import {
+  exists
+} from "../utils/error";
 
 import Material from "../materials/Material";
-import { flashSettings } from "../config";
+import {
+  flashSettings
+} from "../config";
 
-export default class Section {
+class Section {
   /**
    * Section contructor
    *
@@ -36,9 +43,9 @@ export default class Section {
   }
 
   updateMaterial(materialSettings) {
-    const settings = _.has(materialSettings, "material")
-      ? materialSettings.material
-      : materialSettings;
+    const settings = _.has(materialSettings, "material") ?
+      materialSettings.material :
+      materialSettings;
 
     this.materialAsSettings = settings;
 
@@ -63,17 +70,25 @@ export default class Section {
   }
 
   swapTexture(txt) {
-    this.currentMaterial.swapTexture(txt);
+    const newSettings = _.defaultsDeep({}, txt, this.materialAsSettings);
+    this.currentMaterial.swapTexture(newSettings);
     this.children.forEach((child) => child.swapTexture(txt));
+    this.materialAsSettings = newSettings;
   }
 
   flash() {
-    const { color } = flashSettings;
+    const {
+      color
+    } = flashSettings;
     const currentColor = this.currentMaterial.settings.color;
 
     tween({
-      from: { hex: currentColor },
-      to: { hex: color },
+      from: {
+        hex: currentColor
+      },
+      to: {
+        hex: color
+      },
       duration: flashSettings.speed / 2,
       step: (state) => {
         this.swapColor(state.hex, false);
@@ -81,8 +96,12 @@ export default class Section {
       },
     });
     tween({
-      to: { hex: currentColor },
-      from: { hex: color },
+      to: {
+        hex: currentColor
+      },
+      from: {
+        hex: color
+      },
       duration: flashSettings.speed / 2,
       delay: flashSettings.speed / 2,
       step: (state) => {
@@ -155,3 +174,5 @@ export default class Section {
     this.persistentTexture = texture;
   }
 }
+
+export default Section;

@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Ubiety</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Ubiety.html">Ubiety</a></li></ul><h3>Classes</h3><ul><li><a href="Material.html">Material</a></li><li><a href="module-Ubiety-Ubiety.html">Ubiety</a></li><li><a href="Section.html">Section</a></li><li><a href="Theme.html">Theme</a></li></ul><h3>Global</h3><ul><li><a href="global.html#color">color</a></li><li><a href="global.html#defaults">defaults</a></li><li><a href="global.html#defaultTheme">defaultTheme</a></li><li><a href="global.html#engineConfig">engineConfig</a></li><li><a href="global.html#exists">exists</a></li><li><a href="global.html#flashSettings">flashSettings</a></li><li><a href="global.html#getGLTFLoader">getGLTFLoader</a></li><li><a href="global.html#getNewLoadingManager">getNewLoadingManager</a></li><li><a href="global.html#getNewRaycaster">getNewRaycaster</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#icons">icons</a></li><li><a href="global.html#isElement">isElement</a></li><li><a href="global.html#sortObjectByArray">sortObjectByArray</a></li><li><a href="global.html#theme">theme</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Class</p>
+                    <h1>Ubiety</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="module-Ubiety.html">Ubiety</a>~</span>Ubiety<span class="signature">(root, modelPath, settings)</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
+
+
+    
+    <h4 class="name" id="Ubiety">
+        <a class="href-link" href="#Ubiety">#</a>
+        
+        <span class="code-name">
+            
+                new Ubiety<span class="signature">(root, modelPath, settings)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Ubiety</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>root</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Element</span>
+|
+
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>A selector for a root element or an element itself.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>modelPath</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The path of the .gLTF(glb) model.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>settings</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Optional. Options to change default behaviour.</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line64">line 64</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>When the given root element or selector is invalid.</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="_loop">
+    <a class="href-link" href="#_loop">#</a>
+    
+    <span class="code-name">
+        _loop
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>An animation loop, firing 60 frames per second.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line143">line 143</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="activeSection">
+    <a class="href-link" href="#activeSection">#</a>
+    
+    <span class="code-name">
+        activeSection
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A reference to the active section. Used internally</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line208">line 208</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="addSSAO">
+    <a class="href-link" href="#addSSAO">#</a>
+    
+    <span class="code-name">
+        addSSAO
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Depricated. TODO: Replace with FXAA</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line148">line 148</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="camera">
+    <a class="href-link" href="#camera">#</a>
+    
+    <span class="code-name">
+        camera
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A ThreeJS Perspective camera. Settings for this camera can be found in the config file.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line114">line 114</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="controls">
+    <a class="href-link" href="#controls">#</a>
+    
+    <span class="code-name">
+        controls
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>An instance of OrbitControls. Settings for these controls are found in the config file.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line132">line 132</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="debug">
+    <a class="href-link" href="#debug">#</a>
+    
+    <span class="code-name">
+        debug
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>When set active, a framerate indicator displays in the top corner of the scene</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line172">line 172</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="effectComposer">
+    <a class="href-link" href="#effectComposer">#</a>
+    
+    <span class="code-name">
+        effectComposer
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A ThreeJS EffectComposer, used to combine a standard render pass and a post-processing effect</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line154">line 154</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="effectPass">
+    <a class="href-link" href="#effectPass">#</a>
+    
+    <span class="code-name">
+        effectPass
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>An effects pass used to post-process the render pass.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line165">line 165</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="gltfLoader">
+    <a class="href-link" href="#gltfLoader">#</a>
+    
+    <span class="code-name">
+        gltfLoader
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A GLTFLoader, a module used to load the model file</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line126">line 126</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="gui">
+    <a class="href-link" href="#gui">#</a>
+    
+    <span class="code-name">
+        gui
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>GUI used in internally for development.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line184">line 184</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="model">
+    <a class="href-link" href="#model">#</a>
+    
+    <span class="code-name">
+        model
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The model is stored here once it's loaded by the GLTFLoader. This houses the GLTF Scene only, animations are not stored.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>null</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line199">line 199</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="modelManager">
+    <a class="href-link" href="#modelManager">#</a>
+    
+    <span class="code-name">
+        modelManager
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A ThreeJS LoadingManager, this controls events during the start of the model loading process, during the process, and once it's loaded.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line120">line 120</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">String</span>
+
+
+    </span>
+
+<h4 class="name" id="modelPath">
+    <a class="href-link" href="#modelPath">#</a>
+    
+    <span class="code-name">
+        modelPath
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A path to the .gLTF/.glb model to be loaded on initialization of this class.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line90">line 90</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="raycaster">
+    <a class="href-link" href="#raycaster">#</a>
+    
+    <span class="code-name">
+        raycaster
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A ThreeJS Raycaster. Controls click events within the ThreeJS scene.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line138">line 138</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="renderer">
+    <a class="href-link" href="#renderer">#</a>
+    
+    <span class="code-name">
+        renderer
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A ThreeJS WebGLRenderer. Settings for this renderer can be found in the config file.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line108">line 108</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="renderInLoop">
+    <a class="href-link" href="#renderInLoop">#</a>
+    
+    <span class="code-name">
+        renderInLoop
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>When set active, the renderer will refresh constantly as opposed to only when the scene camera moves or colours are changed within
+the model. This has a performance impact but is worth activing if post-processing relies on it.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line192">line 192</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="renderPass">
+    <a class="href-link" href="#renderPass">#</a>
+    
+    <span class="code-name">
+        renderPass
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A standard render pass used within the EffectComposer class.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line160">line 160</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Element</span>
+
+
+    </span>
+
+<h4 class="name" id="root">
+    <a class="href-link" href="#root">#</a>
+    
+    <span class="code-name">
+        root
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The root element that Ubiety will append a child to, this element's height
+and width will be used to determine the canvas size itself. The canvas
+should never be directly adjusted in height and width.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line80">line 80</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Class</span>
+
+
+    </span>
+
+<h4 class="name" id="scene">
+    <a class="href-link" href="#scene">#</a>
+    
+    <span class="code-name">
+        scene
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A ThreeJS scene, the main 3D scene rendered in the canvas.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line102">line 102</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="sections">
+    <a class="href-link" href="#sections">#</a>
+    
+    <span class="code-name">
+        sections
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>An array of Section classes used internally</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>empty</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line205">line 205</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="settings">
+    <a class="href-link" href="#settings">#</a>
+    
+    <span class="code-name">
+        settings
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Settings, deep merged with the defaults Object found in the config file.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line96">line 96</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="stats">
+    <a class="href-link" href="#stats">#</a>
+    
+    <span class="code-name">
+        stats
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>A Stats class used internally, this generates the framerate indictor when debug mode is true.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line178">line 178</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_renderSectionSelector">
+        <a class="href-link" href="#_renderSectionSelector">#</a>
+        
+        <span class="code-name">
+            
+                _renderSectionSelector<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>UI Rendering</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line607">line 607</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_updateAspect">
+        <a class="href-link" href="#_updateAspect">#</a>
+        
+        <span class="code-name">
+            
+                _updateAspect<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Runtime phase</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line412">line 412</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="mount">
+        <a class="href-link" href="#mount">#</a>
+        
+        <span class="code-name">
+            
+                mount<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Mounting phase</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line224">line 224</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="swapColor">
+        <a class="href-link" href="#swapColor">#</a>
+        
+        <span class="code-name">
+            
+                swapColor<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Actions</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="ubiety.js.html" class="button">View Source</a>
+            <span>
+                <a href="ubiety.js.html">ubiety.js</a>, <a href="ubiety.js.html#line495">line 495</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

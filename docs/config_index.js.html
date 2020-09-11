@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> config/index.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Ubiety.html">Ubiety</a></li></ul><h3>Classes</h3><ul><li><a href="Material.html">Material</a></li><li><a href="module-Ubiety-Ubiety.html">Ubiety</a></li><li><a href="Section.html">Section</a></li><li><a href="Theme.html">Theme</a></li></ul><h3>Global</h3><ul><li><a href="global.html#color">color</a></li><li><a href="global.html#defaults">defaults</a></li><li><a href="global.html#defaultTheme">defaultTheme</a></li><li><a href="global.html#engineConfig">engineConfig</a></li><li><a href="global.html#exists">exists</a></li><li><a href="global.html#flashSettings">flashSettings</a></li><li><a href="global.html#getGLTFLoader">getGLTFLoader</a></li><li><a href="global.html#getNewLoadingManager">getNewLoadingManager</a></li><li><a href="global.html#getNewRaycaster">getNewRaycaster</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#icons">icons</a></li><li><a href="global.html#isElement">isElement</a></li><li><a href="global.html#sortObjectByArray">sortObjectByArray</a></li><li><a href="global.html#theme">theme</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>config/index.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+  Math as ThreeMath,
+  LinearToneMapping,
+  NoToneMapping,
+  ReinhardToneMapping,
+  CineonToneMapping,
+  ACESFilmicToneMapping,
+} from "three";
+
+// eslint-disable-next-line import/no-cycle
+import { color } from "../utils";
+// eslint-disable-next-line import/no-cycle
+
+export const APP_NAME = "Ubiety";
+export const BRAND_COLOR = "#11864a";
+export const TEXTURE_PATH = "./public/textures";
+
+/**
+ * Default config for the Ubiety class
+ */
+export const defaults = {
+  initialMaterials: [],
+  worldOffset: -0.33,
+  order: [],
+  groups: [],
+  persistentTextures: [],
+};
+
+/**
+ * Parameters for the 3D scene
+ */
+export const engineConfig = {
+  sceneSettings: {
+    background: color("#f1f3f4"),
+  },
+  cameraSettings: {
+    fov: 30,
+    near: 1,
+    far: 300,
+    position: { x: -3, y: 0, z: 2 },
+  },
+  rendererSettings: {
+    constructor: {
+      antialias: true,
+      preserveDrawingBuffer: true,
+    },
+    gammaFactor: 2.2,
+    toneMapping: LinearToneMapping,
+  },
+  controlSettings: {
+    enableDampening: true,
+    enableKeys: false,
+    dampeningFactor: 0.2,
+    rotateSpeed: 0.5,
+    minPolarAngle: ThreeMath.degToRad(0),
+    maxPolarAngle: ThreeMath.degToRad(85),
+    minDistance: 0,
+    maxDistance: 40,
+  },
+};
+
+/**
+ * Theme
+ */
+
+export const defaultTheme = {
+  lights: [
+    {
+      id: "hemi",
+      sky: 0xffffff,
+      ground: 0xffffff,
+      intensity: 1.75,
+      position: { x: 0, y: 50, z: 0 },
+    },
+    {
+      id: "directional",
+      color: 0xffffff,
+      intensity: 1,
+      position: { x: -5, y: 16, z: 0 },
+      shadows: false,
+      mapSize: 4,
+    },
+    {
+      id: "directional",
+      color: 0xffffff,
+      intensity: 1,
+      position: { x: 5, y: 16, z: 0 },
+      shadows: false,
+      mapSize: 4,
+    },
+  ],
+  floor: {
+    color: "#333333",
+    depth: 20,
+    shadowOnly: true,
+    shininess: 1,
+    shadowOpacity: 0.2,
+  },
+};
+
+const spotlightIntensity = 10;
+const spotlightDistance = 10;
+const spotlightHeightReduction = 1;
+const spotlightHeight = spotlightDistance - spotlightHeightReduction;
+
+export const spotlightTheme = {
+  lights: [
+    {
+      id: "hemi",
+      sky: 0xffffff,
+      ground: 0xffffff,
+      intensity: 0.66,
+      position: { x: 0, y: 50, z: 0 },
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: 0, y: spotlightDistance + spotlightHeightReduction, z: 0 },
+      intensity: spotlightIntensity - spotlightIntensity / 3,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: spotlightDistance, y: spotlightHeight, z: 0 },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: spotlightDistance * -1, y: spotlightHeight, z: 0 },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: 0, y: spotlightHeight, z: spotlightDistance },
+      intensity: spotlightIntensity,
+    },
+    {
+      id: "spot",
+      color: 0xffffff,
+      position: { x: 0, y: spotlightHeight, z: spotlightDistance * -1 },
+      intensity: spotlightIntensity,
+    },
+  ],
+  floor: {
+    color: "#333333",
+    depth: 20,
+    shadowOnly: true,
+    shininess: 1,
+    shadowOpacity: 0.2,
+  },
+};
+
+/**
+ * Flash material
+ */
+
+export const flashSettings = {
+  color: BRAND_COLOR,
+  speed: 200,
+};
+
+/**
+ * Icons
+ */
+
+export const icons = {
+  right: `&lt;svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+   &lt;path d="M3.46 13.6788C3.5611 13.7313 3.67462 13.7554 3.78836 13.7484C3.90211 13.7413 4.01179 13.7034 4.10562 13.6388L12.2306 8.01375C12.3136 7.95623 12.3815 7.87945 12.4284 7.78998C12.4752 7.7005 12.4997 7.60101 12.4997 7.5C12.4997 7.399 12.4752 7.2995 12.4284 7.21003C12.3815 7.12056 12.3136 7.04377 12.2306 6.98625L4.10562 1.36125C4.01186 1.29637 3.90213 1.25838 3.78832 1.25139C3.67451 1.2444 3.56096 1.26867 3.45996 1.32159C3.35895 1.3745 3.27435 1.45404 3.21531 1.55159C3.15627 1.64914 3.12504 1.76098 3.125 1.875V13.125C3.12498 13.2391 3.15619 13.351 3.21524 13.4486C3.27429 13.5462 3.35894 13.6258 3.46 13.6788Z" fill="black"/>
+   &lt;/svg>`,
+  menu: `&lt;svg width="28" height="21" viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+   &lt;path d="M4.8125 6.23438H23.1875" stroke="black" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+   &lt;path d="M4.8125 10.5H23.1875" stroke="black" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+   &lt;path d="M4.8125 14.7656H23.1875" stroke="black" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+   &lt;/svg>`,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

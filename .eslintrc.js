@@ -15,7 +15,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "prettier/prettier": "error",
+    "prettier/prettier": "off",
     "no-unused-vars": "warn",
     "no-console": "off",
     "func-names": "off",

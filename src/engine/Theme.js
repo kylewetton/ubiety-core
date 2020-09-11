@@ -3,6 +3,7 @@
  *
  * @author    Kyle Wetton
  * @copyright Kyle Wetton. All rights reserved.
+ * @class Theme
  */
 
 import {
@@ -20,7 +21,7 @@ import {
  * A Theme class generates lights and the floor based on input
  */
 
-export default class Theme {
+class Theme {
   /**
    * Theme constructor.
    *
@@ -41,13 +42,19 @@ export default class Theme {
   }
 
   buildLights() {
-    const { lights } = this.settings;
+    const {
+      lights
+    } = this.settings;
     const hemi = lights.filter((light) => light.id === "hemi");
     const directional = lights.filter((light) => light.id === "directional");
     const spot = lights.filter((light) => light.id === "spot");
 
     hemi.forEach((light) => {
-      const { x, y, z } = light.position;
+      const {
+        x,
+        y,
+        z
+      } = light.position;
 
       const hemiLight = new HemisphereLight(
         light.sky,
@@ -59,7 +66,11 @@ export default class Theme {
     });
 
     directional.forEach((light) => {
-      const { x, y, z } = light.position;
+      const {
+        x,
+        y,
+        z
+      } = light.position;
       const d = 8.25;
       const directionalLight = new DirectionalLight(
         light.color,
@@ -83,7 +94,11 @@ export default class Theme {
     });
 
     spot.forEach((light) => {
-      const { x, y, z } = light.position;
+      const {
+        x,
+        y,
+        z
+      } = light.position;
       const spotLight = new SpotLight(light.color, light.intensity);
       spotLight.position.set(x, y, z);
       this.lights.push(spotLight);
@@ -116,3 +131,5 @@ export default class Theme {
     this.floor = floor;
   }
 }
+
+export default Theme;

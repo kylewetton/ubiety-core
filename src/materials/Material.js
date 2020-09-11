@@ -3,10 +3,13 @@
  *
  * @author    Kyle Wetton
  * @copyright Kyle Wetton. All rights reserved.
+ * @class Material
  */
 
 import _ from "lodash";
-import { v4 as uuidv4 } from "uuid";
+import {
+  v4 as uuidv4
+} from "uuid";
 import {
   MeshPhongMaterial,
   MeshPhysicalMaterial,
@@ -18,14 +21,25 @@ import {
   Vector2,
   FrontSide,
 } from "three";
-import { color as linearColor } from "../utils";
-import { TEXTURE_PATH } from "../config";
+import {
+  color as linearColor
+} from "../utils";
+import {
+  TEXTURE_PATH
+} from "../config";
 
 const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 
 const getTexturePack = (pack) => {
-  const { folder, tag, repeat, flip, url, ...maps } = pack;
+  const {
+    folder,
+    tag,
+    repeat,
+    flip,
+    url,
+    ...maps
+  } = pack;
   const path = `${TEXTURE_PATH}/${folder}/`;
   const scale = repeat > 1 ? repeat : 1;
   const texturePack = {};
@@ -94,7 +108,7 @@ const defaults = {
   envMapIntensity: 1.5,
 };
 
-export default class Material {
+class Material {
   constructor(settings = {}, tag, globalParent) {
     this.material = null;
     this.tag = tag;
@@ -132,13 +146,16 @@ export default class Material {
       `${r}pz.png`,
       `${r}nz.png`,
     ];
-    const textureCube = this.settings.metal
-      ? new CubeTextureLoader(textureLoadManager).load(urls)
-      : null;
+    const textureCube = this.settings.metal ?
+      new CubeTextureLoader(textureLoadManager).load(urls) :
+      null;
 
     const overrides = this._getOverrides();
 
-    const settings = { ...this.settings, ...overrides };
+    const settings = {
+      ...this.settings,
+      ...overrides,
+    };
 
     const {
       type,
@@ -162,13 +179,16 @@ export default class Material {
     const texturePack = getTexturePack(texture);
     shapedSettings.transparent = _.has(texturePack, "alphaMap") && true;
 
-    this._buildMaterial({ ...shapedSettings, ...texturePack });
+    this._buildMaterial({
+      ...shapedSettings,
+      ...texturePack,
+    });
   }
 
   _buildMaterial(shapedSettings) {
-    const material = this.settings.metal
-      ? new MeshPhysicalMaterial(shapedSettings)
-      : new MeshPhongMaterial(shapedSettings);
+    const material = this.settings.metal ?
+      new MeshPhysicalMaterial(shapedSettings) :
+      new MeshPhongMaterial(shapedSettings);
     this.material = material;
   }
 
@@ -181,17 +201,33 @@ export default class Material {
 
   swapColor(color) {
     this.settings.color = color;
-    this.material.setValues({ color: linearColor(color) });
+    this.material.setValues({
+      color: linearColor(color),
+    });
   }
 
   swapTexture(payload) {
     const def = defaults.texture;
-    const { texture: txt, ...rest } = payload;
-
+    const {
+      texture: txt,
+      ...rest
+    } = payload;
     const overrides = this._getOverrides();
-    const pack = getTexturePack({ ...def, ...txt, ...overrides.texture });
-    const newValues = { ...pack, ...rest };
-    this.material.setValues({ ...newValues });
+    const pack = getTexturePack({
+      ...def,
+      ...txt,
+      ...overrides.texture,
+    });
+    const newValues = {
+      ...pack,
+      ...rest,
+    };
+    console.log(newValues);
+    this.material.setValues({
+      ...newValues,
+    });
     this.material.needsUpdate = true;
   }
 }
+
+export default Material;

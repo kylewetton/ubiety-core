@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> materials/index.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Ubiety.html">Ubiety</a></li></ul><h3>Classes</h3><ul><li><a href="Material.html">Material</a></li><li><a href="module-Ubiety-Ubiety.html">Ubiety</a></li><li><a href="Section.html">Section</a></li><li><a href="Theme.html">Theme</a></li></ul><h3>Global</h3><ul><li><a href="global.html#color">color</a></li><li><a href="global.html#defaults">defaults</a></li><li><a href="global.html#defaultTheme">defaultTheme</a></li><li><a href="global.html#engineConfig">engineConfig</a></li><li><a href="global.html#exists">exists</a></li><li><a href="global.html#flashSettings">flashSettings</a></li><li><a href="global.html#getGLTFLoader">getGLTFLoader</a></li><li><a href="global.html#getNewLoadingManager">getNewLoadingManager</a></li><li><a href="global.html#getNewRaycaster">getNewRaycaster</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#icons">icons</a></li><li><a href="global.html#isElement">isElement</a></li><li><a href="global.html#sortObjectByArray">sortObjectByArray</a></li><li><a href="global.html#theme">theme</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>materials/index.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+  MeshPhongMaterial,
+  MeshPhysicalMaterial,
+  CubeTextureLoader,
+  LoadingManager,
+  TextureLoader,
+  RepeatWrapping,
+  Color,
+} from "three";
+import _ from "lodash";
+import { color } from "../utils";
+import { TEXTURE_PATH } from "../config";
+
+const textureLoadManager = new LoadingManager();
+const textureLoader = new TextureLoader(textureLoadManager);
+
+const getTexturePack = (pack) => {
+  const { label, repeat, flip, url, ...maps } = pack;
+  const path = `${TEXTURE_PATH}/${label}/`;
+  const scale = repeat > 1 ? repeat : 1;
+  const texturePack = {};
+
+  /**
+   * Dict renames the values to spread maps into material
+   */
+  const dict = {
+    color: "map",
+    ao: "aoMap",
+    normal: "normalMap",
+    roughness: "roughnessMap",
+    alpha: "alphaMap",
+  };
+
+  _.forOwn(maps, function (value, key) {
+    if (value) {
+      let texture;
+      if (key === "color" &amp;&amp; url) {
+        texture = textureLoader.load(url);
+        texture.repeat.set(1, 1);
+      } else {
+        texture = textureLoader.load(`${path}${key}.jpg`);
+        texture.repeat.set(scale, scale);
+      }
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+
+      if (flip) {
+        texture.flipY = false;
+      }
+
+      texturePack[dict[key]] = texture;
+    }
+  });
+  if (url) {
+    console.log(texturePack);
+  }
+
+  return texturePack;
+};
+
+const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
+  const r = `${TEXTURE_PATH}/cubemap/`;
+  const urls = [
+    `${r}px.png`,
+    `${r}nx.png`,
+    `${r}py.png`,
+    `${r}ny.png`,
+    `${r}pz.png`,
+    `${r}nz.png`,
+  ];
+
+  if (globalParent) {
+    textureLoadManager.onLoad = () => globalParent._render();
+  }
+
+  const textureCube =
+    options.type !== "metal"
+      ? null
+      : new CubeTextureLoader(textureLoadManager).load(urls);
+
+  const defaults = {
+    type: "phong",
+    color: "#F1F1F1",
+    texture: null,
+    shininess: 0.2,
+    roughness: 0,
+    metalness: 1,
+    envMap: textureCube,
+    reflectivity: 3,
+    envMapIntensity: 1.5,
+  };
+
+  // hasOwnProperty hack
+  const { tag: noPersistenceTag, ...persistence } = persistentTexture || {
+    tag: "!",
+  };
+
+  const preSettings = _.defaultsDeep({}, options, defaults);
+  const settings = _.defaultsDeep({}, persistence, preSettings);
+
+  if (!(settings.color instanceof Color)) {
+    const linearColor = color(settings.color);
+    settings.color = linearColor;
+  }
+
+  const textures =
+    settings.type !== "texture"
+      ? null
+      : getTexturePack(settings.texture, settings.tag);
+
+  /**
+   * Use spread to exclude the settings
+   *
+   * Using this method lets you dynamically add settings but force exclusion of others,
+   *  this will safely filter out the settings and only use what it's allowed to use.
+   *
+   * https://dev.to/darksmile92/js-use-spread-to-exclude-properties-1km9
+   */
+
+  const {
+    type: noPhongType,
+    tag: noPhongTag,
+    texture: noPhongTexture,
+    metalness: noPhongMetalness,
+    envMap: noPhongEnvMap,
+    reflectivity: noPhongReflectivity,
+    envMapIntensity: noEnvMapIntensity,
+    roughness: noPhongRoughness,
+    ...phongSettings // Use this variable
+  } = settings;
+
+  const {
+    type: noMetalType,
+    tag: noMetalTag,
+    texture: noMetalTexture,
+    shininess: noMetalShininess,
+    ...metalSettings // Use this variable
+  } = settings;
+
+  const {
+    type: noTextureType,
+    tag: noTextureTag,
+    metalness: noTextureMetalness,
+    reflectivity: noReflectivity,
+    envMap: noTextureEnvMap,
+    roughness: noTextureRoughness,
+    envMapIntensity: noTextureEnvMapIntensity,
+    shininess: noTextureShininess,
+    texture: noTextureTexture,
+    ...textureSettings
+  } = settings;
+
+  let material;
+  switch (settings.type) {
+    case "phong":
+      material = new MeshPhongMaterial({
+        ...phongSettings,
+      });
+      break;
+    case "metal":
+      material = new MeshPhysicalMaterial({
+        ...metalSettings,
+      });
+      break;
+    case "texture":
+      material = new MeshPhysicalMaterial({
+        ...textureSettings,
+        ...textures,
+      });
+      break;
+
+    default:
+      material = new MeshPhongMaterial({ color: settings.color });
+  }
+  material.transparent = true;
+  return material;
+};
+
+export default getNewMaterial;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>
