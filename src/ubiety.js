@@ -54,6 +54,8 @@ import {
 import {
   getSize,
   sortObjectByArray,
+  cleanOrigin,
+  cleanScale,
 } from './utils';
 import Section from './sections';
 
@@ -234,7 +236,7 @@ class Ubiety {
     this.gltfLoader.load(
       this.modelPath,
       (gltf) => {
-        const {
+        let {
           scene: model,
         } = gltf;
         const unorderedSections = [];
@@ -296,6 +298,8 @@ class Ubiety {
         );
 
         model.position.y += this.settings.worldOffset;
+        model = cleanScale(this.settings.scale, model);
+        model = cleanOrigin(model);
         this.model = model;
 
         this.scene.add(model);

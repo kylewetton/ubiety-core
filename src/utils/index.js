@@ -8,7 +8,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
-  Color,
+  Color, Box3, Vector3,
 } from 'three';
 import {
   isElement,
@@ -80,8 +80,6 @@ export const sortObjectByArray = (
   const sortedItemsFiltered = sortedItems.filter((item) => item);
   const nonSortedItemsFiltered = nonSortedItems.filter((item) => item);
 
-  console.log(sortedItemsFiltered);
-
   const sortedArray = [...sortedItemsFiltered, ...nonSortedItemsFiltered];
 
   if (sortIndexProperty) {
@@ -91,4 +89,55 @@ export const sortObjectByArray = (
   }
 
   return sortedArray;
+};
+
+/** Clean scale of model
+ * @param {number} width Width in metres
+ * @param {object} model loaded model
+ * @return {object} A model with the width set to the the dimensions
+ */
+
+export const cleanScale = (width, model) => {
+  const box = new Box3().setFromObject(model.children[0]);
+  const size = new Vector3();
+  box.getSize(size);
+  const delta = model.scale.x;
+  const scaleVec = new Vector3(
+    width * delta,
+    width * delta,
+    width * delta,
+  ).divide(size);
+  const scale = Math.min(scaleVec.x, Math.min(scaleVec.y, scaleVec.z));
+
+  model.scale.setScalar(scale);
+  return model;
+};
+
+/** Moves the model to world origin
+ * @param {object} model loaded model
+ * @return {object} The model moved to the world origin
+ */
+
+const computeOriginOffset = ({ max, min }) => {
+  const width = Math.abs(max.x - min.x);
+  const height = Math.abs(max.y - min.y);
+  const depth = Math.abs(max.z - min.z);
+
+  const centerX = (max.x - width / 2) * -1;
+  const centerY = (max.y - height) * -1;
+  const centerZ = (max.z - depth / 2) * -1;
+
+  return { x: centerX, y: centerY, z: centerZ };
+};
+
+export const cleanOrigin = (model) => {
+  const boundingBox = new Box3();
+
+  boundingBox.setFromObject(model.children[0]);
+  const move = computeOriginOffset(boundingBox);
+
+  model.children[0].translateX(move.x);
+  model.children[0].translateY(move.y);
+  model.children[0].translateZ(move.z);
+  return model;
 };

@@ -5,15 +5,15 @@ import {
   ReinhardToneMapping,
   CineonToneMapping,
   ACESFilmicToneMapping,
-} from "three";
+} from 'three';
 
 // eslint-disable-next-line import/no-cycle
-import { color } from "../utils";
+import { color } from '../utils';
 // eslint-disable-next-line import/no-cycle
 
-export const APP_NAME = "Ubiety";
-export const BRAND_COLOR = "#11864a";
-export const TEXTURE_PATH = "./public/textures";
+export const APP_NAME = 'Ubiety';
+export const BRAND_COLOR = '#11864a';
+export const TEXTURE_PATH = './public/textures';
 
 /**
  * Default config for the Ubiety class
@@ -24,6 +24,7 @@ export const defaults = {
   order: [],
   groups: [],
   persistentTextures: [],
+  scale: 1,
 };
 
 /**
@@ -31,7 +32,7 @@ export const defaults = {
  */
 export const engineConfig = {
   sceneSettings: {
-    background: color("#f1f3f4"),
+    background: color('#f1f3f4'),
   },
   cameraSettings: {
     fov: 30,
@@ -66,14 +67,14 @@ export const engineConfig = {
 export const defaultTheme = {
   lights: [
     {
-      id: "hemi",
+      id: 'hemi',
       sky: 0xffffff,
       ground: 0xffffff,
       intensity: 1.75,
       position: { x: 0, y: 50, z: 0 },
     },
     {
-      id: "directional",
+      id: 'directional',
       color: 0xffffff,
       intensity: 1,
       position: { x: -5, y: 16, z: 0 },
@@ -81,7 +82,7 @@ export const defaultTheme = {
       mapSize: 4,
     },
     {
-      id: "directional",
+      id: 'directional',
       color: 0xffffff,
       intensity: 1,
       position: { x: 5, y: 16, z: 0 },
@@ -90,7 +91,7 @@ export const defaultTheme = {
     },
   ],
   floor: {
-    color: "#333333",
+    color: '#333333',
     depth: 20,
     shadowOnly: true,
     shininess: 1,
@@ -106,45 +107,45 @@ const spotlightHeight = spotlightDistance - spotlightHeightReduction;
 export const spotlightTheme = {
   lights: [
     {
-      id: "hemi",
+      id: 'hemi',
       sky: 0xffffff,
       ground: 0xffffff,
       intensity: 0.66,
       position: { x: 0, y: 50, z: 0 },
     },
     {
-      id: "spot",
+      id: 'spot',
       color: 0xffffff,
       position: { x: 0, y: spotlightDistance + spotlightHeightReduction, z: 0 },
       intensity: spotlightIntensity - spotlightIntensity / 3,
     },
     {
-      id: "spot",
+      id: 'spot',
       color: 0xffffff,
       position: { x: spotlightDistance, y: spotlightHeight, z: 0 },
       intensity: spotlightIntensity,
     },
     {
-      id: "spot",
+      id: 'spot',
       color: 0xffffff,
       position: { x: spotlightDistance * -1, y: spotlightHeight, z: 0 },
       intensity: spotlightIntensity,
     },
     {
-      id: "spot",
+      id: 'spot',
       color: 0xffffff,
       position: { x: 0, y: spotlightHeight, z: spotlightDistance },
       intensity: spotlightIntensity,
     },
     {
-      id: "spot",
+      id: 'spot',
       color: 0xffffff,
       position: { x: 0, y: spotlightHeight, z: spotlightDistance * -1 },
       intensity: spotlightIntensity,
     },
   ],
   floor: {
-    color: "#333333",
+    color: '#333333',
     depth: 20,
     shadowOnly: true,
     shininess: 1,
