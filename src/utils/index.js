@@ -8,11 +8,11 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
-  Color
-} from "three";
+  Color,
+} from 'three';
 import {
-  isElement
-} from "./error";
+  isElement,
+} from './error';
 
 /**
  * Converts a hex into a linear THREE color
@@ -36,16 +36,16 @@ export const getSize = (element) => {
   if (
     isElement(
       element,
-      "Trying to get size of an element that doesn't exist. Make sure the root element is set correctly."
+      "Trying to get size of an element that doesn't exist. Make sure the root element is set correctly.",
     )
   ) {
     const {
       width,
-      height
+      height,
     } = element.getBoundingClientRect();
     return {
       width,
-      height
+      height,
     };
   }
 };
@@ -63,7 +63,7 @@ export const sortObjectByArray = (
   object,
   orderArray,
   key,
-  sortIndexProperty = false
+  sortIndexProperty = false,
 ) => {
   const nonSortedItems = [];
   const sortedItems = [];
@@ -77,8 +77,8 @@ export const sortObjectByArray = (
     }
   });
 
-  const sortedItemsFiltered = sortedItems.filter(item => item);
-  const nonSortedItemsFiltered = nonSortedItems.filter(item => item);
+  const sortedItemsFiltered = sortedItems.filter((item) => item);
+  const nonSortedItemsFiltered = nonSortedItems.filter((item) => item);
 
   console.log(sortedItemsFiltered);
 

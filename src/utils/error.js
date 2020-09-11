@@ -5,9 +5,9 @@
  * @copyright Livrée. All rights reserved.
  */
 
-import { APP_NAME } from "../config";
+import { APP_NAME } from '../config';
 
-const _ = require("lodash");
+const _ = require('lodash');
 
 /**
  * Check existence of the given object and throw an error if it doesn't.

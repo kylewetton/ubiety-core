@@ -15,7 +15,7 @@ import {
   ShadowMaterial,
   MeshLambertMaterial,
   Mesh,
-} from "three";
+} from 'three';
 
 /**
  * A Theme class generates lights and the floor based on input
@@ -43,23 +43,23 @@ class Theme {
 
   buildLights() {
     const {
-      lights
+      lights,
     } = this.settings;
-    const hemi = lights.filter((light) => light.id === "hemi");
-    const directional = lights.filter((light) => light.id === "directional");
-    const spot = lights.filter((light) => light.id === "spot");
+    const hemi = lights.filter((light) => light.id === 'hemi');
+    const directional = lights.filter((light) => light.id === 'directional');
+    const spot = lights.filter((light) => light.id === 'spot');
 
     hemi.forEach((light) => {
       const {
         x,
         y,
-        z
+        z,
       } = light.position;
 
       const hemiLight = new HemisphereLight(
         light.sky,
         light.ground,
-        light.intensity
+        light.intensity,
       );
       hemiLight.position.set(x, y, z);
       this.lights.push(hemiLight);
@@ -69,18 +69,18 @@ class Theme {
       const {
         x,
         y,
-        z
+        z,
       } = light.position;
       const d = 8.25;
       const directionalLight = new DirectionalLight(
         light.color,
-        light.intensity
+        light.intensity,
       );
       directionalLight.position.set(x, y, z);
       directionalLight.castShadow = light.shadows;
       directionalLight.shadow.mapSize = new Vector2(
         light.mapSize,
-        light.mapSize
+        light.mapSize,
       );
 
       directionalLight.shadow.camera.near = 0.1;
@@ -97,7 +97,7 @@ class Theme {
       const {
         x,
         y,
-        z
+        z,
       } = light.position;
       const spotLight = new SpotLight(light.color, light.intensity);
       spotLight.position.set(x, y, z);
@@ -110,7 +110,7 @@ class Theme {
       1500,
       this.settings.floor.depth,
       50,
-      50
+      50,
     );
 
     let floorMaterial;

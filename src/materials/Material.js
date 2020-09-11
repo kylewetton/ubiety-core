@@ -6,10 +6,10 @@
  * @class Material
  */
 
-import _ from "lodash";
+import _ from 'lodash';
 import {
-  v4 as uuidv4
-} from "uuid";
+  v4 as uuidv4,
+} from 'uuid';
 import {
   MeshPhongMaterial,
   MeshPhysicalMaterial,
@@ -20,13 +20,13 @@ import {
   DoubleSide,
   Vector2,
   FrontSide,
-} from "three";
+} from 'three';
 import {
-  color as linearColor
-} from "../utils";
+  color as linearColor,
+} from '../utils';
 import {
-  TEXTURE_PATH
-} from "../config";
+  TEXTURE_PATH,
+} from '../config';
 
 const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
@@ -48,18 +48,18 @@ const getTexturePack = (pack) => {
    * Dict renames the values to spread maps into material
    */
   const dict = {
-    color: "map",
-    ao: "aoMap",
-    normal: "normalMap",
-    roughness: "roughnessMap",
-    alpha: "alphaMap",
-    specular: "specularMap",
+    color: 'map',
+    ao: 'aoMap',
+    normal: 'normalMap',
+    roughness: 'roughnessMap',
+    alpha: 'alphaMap',
+    specular: 'specularMap',
   };
 
-  _.forOwn(maps, function (value, key) {
+  _.forOwn(maps, (value, key) => {
     if (value) {
       let texture;
-      if (key === "color" && url) {
+      if (key === 'color' && url) {
         texture = textureLoader.load(url);
         texture.repeat.set(1, 1);
       } else {
@@ -83,16 +83,16 @@ const getTexturePack = (pack) => {
 };
 
 const defaults = {
-  tag: "default",
-  type: "standard",
-  color: "#f1f1f1",
+  tag: 'default',
+  type: 'standard',
+  color: '#f1f1f1',
   opacity: 1.0,
   transparent: false,
   doubleSided: false, // !
   roughness: 0,
   metal: false,
   texture: {
-    tag: "",
+    tag: '',
     alpha: false,
     ao: false,
     color: false,
@@ -103,7 +103,7 @@ const defaults = {
   aoIntensity: 1,
   normalIntensity: 1,
   shininess: 30,
-  specular: "#111111",
+  specular: '#111111',
   reflectivity: 3,
   envMapIntensity: 1.5,
 };
@@ -129,7 +129,7 @@ class Material {
       const firedOnLoadEvent = this.globalParent.initialMaterialsLoaded;
       textureLoadManager.onLoad = () => {
         if (!firedOnLoadEvent) {
-          document.dispatchEvent(new Event("Ubiety:onLoad"));
+          document.dispatchEvent(new Event('Ubiety:onLoad'));
           this.globalParent.initialMaterialsLoaded = true;
         }
 
@@ -146,9 +146,9 @@ class Material {
       `${r}pz.png`,
       `${r}nz.png`,
     ];
-    const textureCube = this.settings.metal ?
-      new CubeTextureLoader(textureLoadManager).load(urls) :
-      null;
+    const textureCube = this.settings.metal
+      ? new CubeTextureLoader(textureLoadManager).load(urls)
+      : null;
 
     const overrides = this._getOverrides();
 
@@ -177,7 +177,7 @@ class Material {
     shapedSettings.envMap = textureCube || null;
 
     const texturePack = getTexturePack(texture);
-    shapedSettings.transparent = _.has(texturePack, "alphaMap") && true;
+    shapedSettings.transparent = _.has(texturePack, 'alphaMap') && true;
 
     this._buildMaterial({
       ...shapedSettings,
@@ -186,15 +186,15 @@ class Material {
   }
 
   _buildMaterial(shapedSettings) {
-    const material = this.settings.metal ?
-      new MeshPhysicalMaterial(shapedSettings) :
-      new MeshPhongMaterial(shapedSettings);
+    const material = this.settings.metal
+      ? new MeshPhysicalMaterial(shapedSettings)
+      : new MeshPhongMaterial(shapedSettings);
     this.material = material;
   }
 
   _getOverrides() {
     const persistentTexture = this.globalParent.settings.persistentTextures.filter(
-      (override) => this.tag === override.tag
+      (override) => this.tag === override.tag,
     )[0];
     return persistentTexture || {};
   }

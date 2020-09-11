@@ -6,18 +6,18 @@
  * @class Section
  */
 
-import _ from "lodash";
+import _ from 'lodash';
 import {
-  tween
-} from "shifty";
+  tween,
+} from 'shifty';
 import {
-  exists
-} from "../utils/error";
+  exists,
+} from '../utils/error';
 
-import Material from "../materials/Material";
+import Material from '../materials/Material';
 import {
-  flashSettings
-} from "../config";
+  flashSettings,
+} from '../config';
 
 class Section {
   /**
@@ -30,7 +30,7 @@ class Section {
    * @param {Object}          Class    - Parent Ubiety Class
    */
   constructor(mesh, index, globalParent) {
-    this.mesh = exists(mesh, "A Section class needs a mesh to construct. ");
+    this.mesh = exists(mesh, 'A Section class needs a mesh to construct. ');
     this.tag = mesh.name;
     this.index = index;
     this.active = false;
@@ -43,9 +43,9 @@ class Section {
   }
 
   updateMaterial(materialSettings) {
-    const settings = _.has(materialSettings, "material") ?
-      materialSettings.material :
-      materialSettings;
+    const settings = _.has(materialSettings, 'material')
+      ? materialSettings.material
+      : materialSettings;
 
     this.materialAsSettings = settings;
 
@@ -64,9 +64,7 @@ class Section {
     if (_updateMaterialCache) {
       this.materialAsSettings.color = hex;
     }
-    this.children.forEach((child) =>
-      child.swapColor(hex, _updateMaterialCache)
-    );
+    this.children.forEach((child) => child.swapColor(hex, _updateMaterialCache));
   }
 
   swapTexture(txt) {
@@ -78,16 +76,16 @@ class Section {
 
   flash() {
     const {
-      color
+      color,
     } = flashSettings;
     const currentColor = this.currentMaterial.settings.color;
 
     tween({
       from: {
-        hex: currentColor
+        hex: currentColor,
       },
       to: {
-        hex: color
+        hex: color,
       },
       duration: flashSettings.speed / 2,
       step: (state) => {
@@ -97,10 +95,10 @@ class Section {
     });
     tween({
       to: {
-        hex: currentColor
+        hex: currentColor,
       },
       from: {
-        hex: color
+        hex: color,
       },
       duration: flashSettings.speed / 2,
       delay: flashSettings.speed / 2,
@@ -149,8 +147,8 @@ class Section {
   }
 
   getTagAsLabel() {
-    const nameArray = this.mesh.name.split("_");
-    const label = nameArray.join(" ");
+    const nameArray = this.mesh.name.split('_');
+    const label = nameArray.join(' ');
     return _.startCase(label);
   }
 

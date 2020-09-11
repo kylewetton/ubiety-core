@@ -4,8 +4,7 @@ module.exports = {
     es6: true,
     jest: true,
   },
-  extends: ["airbnb/base", "prettier"],
-  plugins: ["prettier"],
+  extends: ["airbnb/base"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -15,13 +14,6 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "prettier/prettier": "off",
-    "no-unused-vars": "warn",
-    "no-console": "off",
-    "func-names": "off",
-    "no-process-exit": "off",
-    "object-shorthand": "off",
-    "class-methods-use-this": "off",
     "no-underscore-dangle": "off",
   },
 };

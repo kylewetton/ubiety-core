@@ -6,16 +6,18 @@ import {
   TextureLoader,
   RepeatWrapping,
   Color,
-} from "three";
-import _ from "lodash";
-import { color } from "../utils";
-import { TEXTURE_PATH } from "../config";
+} from 'three';
+import _ from 'lodash';
+import { color } from '../utils';
+import { TEXTURE_PATH } from '../config';
 
 const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 
 const getTexturePack = (pack) => {
-  const { label, repeat, flip, url, ...maps } = pack;
+  const {
+    label, repeat, flip, url, ...maps
+  } = pack;
   const path = `${TEXTURE_PATH}/${label}/`;
   const scale = repeat > 1 ? repeat : 1;
   const texturePack = {};
@@ -24,17 +26,17 @@ const getTexturePack = (pack) => {
    * Dict renames the values to spread maps into material
    */
   const dict = {
-    color: "map",
-    ao: "aoMap",
-    normal: "normalMap",
-    roughness: "roughnessMap",
-    alpha: "alphaMap",
+    color: 'map',
+    ao: 'aoMap',
+    normal: 'normalMap',
+    roughness: 'roughnessMap',
+    alpha: 'alphaMap',
   };
 
-  _.forOwn(maps, function (value, key) {
+  _.forOwn(maps, (value, key) => {
     if (value) {
       let texture;
-      if (key === "color" && url) {
+      if (key === 'color' && url) {
         texture = textureLoader.load(url);
         texture.repeat.set(1, 1);
       } else {
@@ -73,14 +75,13 @@ const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
     textureLoadManager.onLoad = () => globalParent._render();
   }
 
-  const textureCube =
-    options.type !== "metal"
-      ? null
-      : new CubeTextureLoader(textureLoadManager).load(urls);
+  const textureCube = options.type !== 'metal'
+    ? null
+    : new CubeTextureLoader(textureLoadManager).load(urls);
 
   const defaults = {
-    type: "phong",
-    color: "#F1F1F1",
+    type: 'phong',
+    color: '#F1F1F1',
     texture: null,
     shininess: 0.2,
     roughness: 0,
@@ -92,7 +93,7 @@ const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
 
   // hasOwnProperty hack
   const { tag: noPersistenceTag, ...persistence } = persistentTexture || {
-    tag: "!",
+    tag: '!',
   };
 
   const preSettings = _.defaultsDeep({}, options, defaults);
@@ -103,10 +104,9 @@ const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
     settings.color = linearColor;
   }
 
-  const textures =
-    settings.type !== "texture"
-      ? null
-      : getTexturePack(settings.texture, settings.tag);
+  const textures = settings.type !== 'texture'
+    ? null
+    : getTexturePack(settings.texture, settings.tag);
 
   /**
    * Use spread to exclude the settings
@@ -152,17 +152,17 @@ const getNewMaterial = (options = {}, persistentTexture, globalParent) => {
 
   let material;
   switch (settings.type) {
-    case "phong":
+    case 'phong':
       material = new MeshPhongMaterial({
         ...phongSettings,
       });
       break;
-    case "metal":
+    case 'metal':
       material = new MeshPhysicalMaterial({
         ...metalSettings,
       });
       break;
-    case "texture":
+    case 'texture':
       material = new MeshPhysicalMaterial({
         ...textureSettings,
         ...textures,

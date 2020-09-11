@@ -5,41 +5,41 @@
  * @copyright Kyle Wetton. All rights reserved.
  */
 
-import _ from "lodash";
+import _ from 'lodash';
 import {
-  tween
-} from "shifty";
+  tween,
+} from 'shifty';
 import {
-  Math as ThreeMath
-} from "three";
-import "./styles/index.scss";
+  Math as ThreeMath,
+} from 'three';
+import './styles/index.scss';
 
 /**
  * Post processing
  */
 import {
-  EffectComposer
-} from "three/examples/jsm/postprocessing/EffectComposer";
+  EffectComposer,
+} from 'three/examples/jsm/postprocessing/EffectComposer';
 import {
-  RenderPass
-} from "three/examples/jsm/postprocessing/RenderPass";
+  RenderPass,
+} from 'three/examples/jsm/postprocessing/RenderPass';
 import {
-  SSAOPass
-} from "three/examples/jsm/postprocessing/SSAOPass";
+  SSAOPass,
+} from 'three/examples/jsm/postprocessing/SSAOPass';
 
-import Stats from "three/examples/jsm/libs/stats.module";
+import Stats from 'three/examples/jsm/libs/stats.module';
 import {
-  GUI
-} from "three/examples/jsm/libs/dat.gui.module";
+  GUI,
+} from 'three/examples/jsm/libs/dat.gui.module';
 
 import {
   isElement,
-  exists
-} from "./utils/error";
+  exists,
+} from './utils/error';
 import {
   defaults,
-  icons
-} from "./config";
+  icons,
+} from './config';
 import {
   getNewScene,
   getNewRenderer,
@@ -49,18 +49,17 @@ import {
   getNewControls,
   getNewRaycaster,
   theme,
-} from "./engine";
+} from './engine';
 
 import {
   getSize,
-  sortObjectByArray
-} from "./utils";
-import Section from "./sections";
+  sortObjectByArray,
+} from './utils';
+import Section from './sections';
 
 /** @module Ubiety */
 
 class Ubiety {
-
   /**
    * Ubiety
    * @class Ubiety
@@ -80,14 +79,14 @@ class Ubiety {
     this.root = root instanceof Element ? root : document.querySelector(root);
     isElement(
       this.root,
-      "Couldn't find the root element. Make sure it exists."
+      "Couldn't find the root element. Make sure it exists.",
     );
 
     /**
      * A path to the .gLTF/.glb model to be loaded on initialization of this class.
      * @type {String}
      */
-    this.modelPath = exists(modelPath, "Please provide a path to the model.");
+    this.modelPath = exists(modelPath, 'Please provide a path to the model.');
 
     /**
      * Settings, deep merged with the defaults Object found in the config file.
@@ -222,21 +221,21 @@ class Ubiety {
    * */
 
   mount() {
-    this.root.style.cssText += `height: 100%; position: relative`;
+    this.root.style.cssText += 'height: 100%; position: relative';
 
     if (this.debug) {
       this.gui = new GUI();
       document.body.appendChild(this.stats.dom);
-      this.gui.add(this.effectPass, "kernelRadius").min(0).max(32);
-      this.gui.add(this.effectPass, "minDistance").min(0.001).max(0.02);
-      this.gui.add(this.effectPass, "maxDistance").min(0.01).max(0.3);
+      this.gui.add(this.effectPass, 'kernelRadius').min(0).max(32);
+      this.gui.add(this.effectPass, 'minDistance').min(0.001).max(0.02);
+      this.gui.add(this.effectPass, 'maxDistance').min(0.01).max(0.3);
     }
 
     this.gltfLoader.load(
       this.modelPath,
       (gltf) => {
         const {
-          scene: model
+          scene: model,
         } = gltf;
         const unorderedSections = [];
 
@@ -244,12 +243,12 @@ class Ubiety {
         model.traverse((o) => {
           if (o.isMesh) {
             if (!this.settings.groups.includes(o.parent.name)) {
-              const name = o.name.split("|");
+              const name = o.name.split('|');
               o.name = name[0];
-              o.disabled = name[1] === "disable";
+              o.disabled = name[1] === 'disable';
 
               const materialSettings = this.settings.initialMaterials.filter(
-                (material) => material.tag === o.name
+                (material) => material.tag === o.name,
               )[0];
 
               const section = new Section(o, idx, this);
@@ -266,8 +265,8 @@ class Ubiety {
               }
 
               if (
-                this.settings.order.length &&
-                o.name === this.settings.order[0]
+                this.settings.order.length
+                && o.name === this.settings.order[0]
               ) {
                 section.setActive(true);
                 this.activeSection = section;
@@ -289,13 +288,11 @@ class Ubiety {
           }
         });
 
-
-
         this.sections = sortObjectByArray(
           unorderedSections,
           this.settings.order,
-          "tag",
-          true
+          'tag',
+          true,
         );
 
         model.position.y += this.settings.worldOffset;
@@ -306,14 +303,14 @@ class Ubiety {
       (xhr) => {
         /**
          * Chrome issue where Gzipped content doesn't provide a computable length
-         *
+         * Needs to be resolved
          */
         document.dispatchEvent(
-          new CustomEvent("Ubiety:onProgress", {
+          new CustomEvent('Ubiety:onProgress', {
             detail: (xhr.loaded / xhr.total) * 100,
-          })
+          }),
         );
-      }
+      },
     );
 
     this.modelManager.onLoad = () => {
@@ -324,28 +321,28 @@ class Ubiety {
   }
 
   _createEvents() {
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       this._updateAspect();
     });
 
     window.addEventListener(
-      "mousemove",
+      'mousemove',
       (evt) => this._updateMousePosition(evt),
-      false
+      false,
     );
 
     this.renderer.domElement.addEventListener(
-      "mousedown",
+      'mousedown',
       () => {
         this.mouseDownPosition = {
           ...this.mouse,
         };
       },
-      false
+      false,
     );
 
     this.renderer.domElement.addEventListener(
-      "mouseup",
+      'mouseup',
       () => {
         const looseMouse = {
           x: _.round(this.mouse.x, 2),
@@ -356,16 +353,16 @@ class Ubiety {
           y: _.round(this.mouseDownPosition.y, 2),
         };
         if (
-          looseMouse.x === looseDownMouse.x &&
-          looseMouse.y === looseDownMouse.y
+          looseMouse.x === looseDownMouse.x
+          && looseMouse.y === looseDownMouse.y
         ) {
           this._raycast();
         }
       },
-      false
+      false,
     );
 
-    this.controls.addEventListener("change", () => {
+    this.controls.addEventListener('change', () => {
       if (!this.renderInLoop) {
         this._render();
       }
@@ -374,11 +371,11 @@ class Ubiety {
 
   _buildEngine() {
     const {
-      lights
+      lights,
     } = theme;
     const {
       width,
-      height
+      height,
     } = getSize(this.root);
     lights.forEach((light) => this.scene.add(light));
 
@@ -401,7 +398,7 @@ class Ubiety {
 
   _getPersistentTexture(tag) {
     const pTexture = this.settings.persistentTextures.filter(
-      (texture) => texture.tag === tag
+      (texture) => texture.tag === tag,
     )[0];
 
     return pTexture || {};
@@ -414,7 +411,7 @@ class Ubiety {
   _updateAspect() {
     const {
       width,
-      height
+      height,
     } = getSize(this.root);
     this.camera.aspect = width / height;
     this.renderer.setSize(width, height);
@@ -426,7 +423,7 @@ class Ubiety {
   _updateMousePosition(evt) {
     const {
       width,
-      height
+      height,
     } = getSize(this.root);
     this.mouse.x = (evt.clientX / width) * 2 - 1;
     this.mouse.y = -(evt.clientY / height) * 2 + 1;
@@ -436,11 +433,11 @@ class Ubiety {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObjects(
       this.scene.children,
-      true
+      true,
     );
     if (intersects.length) {
       const {
-        object
+        object,
       } = intersects[0];
       const isChild = this.settings.groups.includes(object.parent.name);
       const tag = isChild ? object.parent.name : object.name;
@@ -462,7 +459,7 @@ class Ubiety {
       },
       duration: 3000,
       delay: 500,
-      easing: "swingFromTo",
+      easing: 'swingFromTo',
       render: (state) => {
         this.model.rotation.y = state.deg;
         if (!this.renderInLoop) {
@@ -521,9 +518,9 @@ class Ubiety {
     this.sections = updateSections;
 
     document.dispatchEvent(
-      new CustomEvent("Ubiety:sectionChange", {
+      new CustomEvent('Ubiety:sectionChange', {
         detail: this.activeSection,
-      })
+      }),
     );
   }
 
@@ -536,12 +533,10 @@ class Ubiety {
   }
 
   _jumpSection(modifier = 1) {
-    const availableSections = this.sections.filter((section) =>
-      section.isEnabled()
-    );
+    const availableSections = this.sections.filter((section) => section.isEnabled());
     const currentIndex = this.activeSection.getIndex();
     let next = availableSections.filter(
-      (section) => section.index === currentIndex + modifier
+      (section) => section.index === currentIndex + modifier,
     )[0];
     if (!next) {
       if (modifier === 1) {
@@ -563,9 +558,9 @@ class Ubiety {
       front: [0, 0.3, 3.5],
       angle: [-2, 0.3, 2.5],
     };
-    const poses = ["top", "outer", "back", "inner", "front", "angle"];
+    const poses = ['top', 'outer', 'back', 'inner', 'front', 'angle'];
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
 
     const takePhoto = (pose) => {
       link.download = `${pose}.png`;
@@ -607,32 +602,30 @@ class Ubiety {
    * */
 
   _renderSectionSelector() {
-    const availableSections = this.sections.filter((section) =>
-      section.isEnabled()
-    );
+    const availableSections = this.sections.filter((section) => section.isEnabled());
 
     this.ui.sectionCount = availableSections.length;
 
     /** Nodes */
-    const uiSelectorWrapper = document.createElement("section");
-    const uiSelectorColLeft = document.createElement("div");
-    const uiSelectorColRight = document.createElement("div");
-    const uiSelectorTitle = document.createElement("h2");
-    const uiCurrentSection = document.createElement("div");
-    const uiBreadcrumb = document.createElement("span");
-    const uiSectionMenu = document.createElement("button");
-    const uiNextSection = document.createElement("button");
-    const uiPrevSection = document.createElement("button");
+    const uiSelectorWrapper = document.createElement('section');
+    const uiSelectorColLeft = document.createElement('div');
+    const uiSelectorColRight = document.createElement('div');
+    const uiSelectorTitle = document.createElement('h2');
+    const uiCurrentSection = document.createElement('div');
+    const uiBreadcrumb = document.createElement('span');
+    const uiSectionMenu = document.createElement('button');
+    const uiNextSection = document.createElement('button');
+    const uiPrevSection = document.createElement('button');
 
     /** Classes */
-    uiSelectorWrapper.classList.add("ubiety__section-selector");
-    uiSelectorColLeft.classList.add("ubiety__col", "ubiety__col--left");
-    uiSectionMenu.classList.add("ubiety__section-menu");
-    uiSelectorColRight.classList.add("ubiety__col", "ubiety__col--right");
-    uiSelectorTitle.classList.add("ubiety__selector-title");
-    uiBreadcrumb.classList.add("ubiety__breadcrumb");
-    uiNextSection.classList.add("ubiety__next-section", "ubiety__jump-section");
-    uiPrevSection.classList.add("ubiety__prev-section", "ubiety__jump-section");
+    uiSelectorWrapper.classList.add('ubiety__section-selector');
+    uiSelectorColLeft.classList.add('ubiety__col', 'ubiety__col--left');
+    uiSectionMenu.classList.add('ubiety__section-menu');
+    uiSelectorColRight.classList.add('ubiety__col', 'ubiety__col--right');
+    uiSelectorTitle.classList.add('ubiety__selector-title');
+    uiBreadcrumb.classList.add('ubiety__breadcrumb');
+    uiNextSection.classList.add('ubiety__next-section', 'ubiety__jump-section');
+    uiPrevSection.classList.add('ubiety__prev-section', 'ubiety__jump-section');
 
     /** Store */
     this.ui.selectorTitle = uiSelectorTitle;
@@ -644,11 +637,11 @@ class Ubiety {
 
     /** Events */
 
-    uiNextSection.addEventListener("click", () => {
+    uiNextSection.addEventListener('click', () => {
       this.nextSection();
     });
 
-    uiPrevSection.addEventListener("click", () => {
+    uiPrevSection.addEventListener('click', () => {
       this.prevSection();
     });
 

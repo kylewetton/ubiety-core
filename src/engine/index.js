@@ -14,11 +14,11 @@ import {
   LoadingManager,
   GammaEncoding,
   Raycaster,
-} from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import Theme from "./Theme";
-import { engineConfig, defaultTheme, spotlightTheme } from "../config";
+} from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Theme from './Theme';
+import { engineConfig, defaultTheme, spotlightTheme } from '../config';
 
 /**
  * SCENE
@@ -61,7 +61,7 @@ export const getNewRenderer = () => {
   rendererInstance.gammaFactor = gammaFactor;
   rendererInstance.outputEncoding = GammaEncoding;
   rendererInstance.physicallyCorrectLights = true;
-  rendererInstance.powerPreference = "high-performance";
+  rendererInstance.powerPreference = 'high-performance';
   rendererInstance.setPixelRatio(pixelRatio);
   rendererInstance.toneMapping = toneMapping;
   return rendererInstance;
@@ -77,17 +77,13 @@ export const getGLTFLoader = (manager) => new GLTFLoader(manager);
  * LOADING MANAGER
  */
 
-export const getNewLoadingManager = () => {
-  return new LoadingManager();
-};
+export const getNewLoadingManager = () => new LoadingManager();
 
 /**
  * RAYCASTER
  */
 
-export const getNewRaycaster = () => {
-  return new Raycaster();
-};
+export const getNewRaycaster = () => new Raycaster();
 
 /**
  * CONTROLS
