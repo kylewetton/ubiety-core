@@ -141,3 +141,5 @@ export const cleanOrigin = (model) => {
   model.children[0].translateZ(move.z);
   return model;
 };
+
+export const isTouchDevice = () => 'ontouchstart' in window;

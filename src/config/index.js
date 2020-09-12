@@ -1,10 +1,6 @@
 import {
   Math as ThreeMath,
   LinearToneMapping,
-  NoToneMapping,
-  ReinhardToneMapping,
-  CineonToneMapping,
-  ACESFilmicToneMapping,
 } from 'three';
 
 // eslint-disable-next-line import/no-cycle
@@ -20,6 +16,7 @@ export const TEXTURE_PATH = './public/textures';
  */
 export const defaults = {
   initialMaterials: [],
+  flashColor: BRAND_COLOR,
   worldOffset: -0.33,
   order: [],
   groups: [],
@@ -158,7 +155,6 @@ export const spotlightTheme = {
  */
 
 export const flashSettings = {
-  color: BRAND_COLOR,
   speed: 200,
 };
 

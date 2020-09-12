@@ -54,8 +54,8 @@ import {
 import {
   getSize,
   sortObjectByArray,
-  cleanOrigin,
   cleanScale,
+  isTouchDevice,
 } from './utils';
 import Section from './sections';
 
@@ -299,10 +299,9 @@ class Ubiety {
 
         model.position.y += this.settings.worldOffset;
         model = cleanScale(this.settings.scale, model);
-        model = cleanOrigin(model);
         this.model = model;
 
-        this.scene.add(model);
+        this.scene.add(this.model);
       },
       (xhr) => {
         /**
@@ -325,19 +324,40 @@ class Ubiety {
   }
 
   _createEvents() {
+    const listeners = {
+      touch: {
+        down: 'touchstart',
+        up: 'touchend',
+        move: 'touchmove',
+      },
+      mouse: {
+        down: 'mousedown',
+        up: 'mouseup',
+        move: 'mousemove',
+      },
+    };
+
+    const device = isTouchDevice() ? 'touch' : 'mouse';
+
     window.addEventListener('resize', () => {
       this._updateAspect();
     });
 
+    /**
+     * Move is required to determine whether the user
+     * is orbiting the model or clicking on it.
+     */
+
     window.addEventListener(
-      'mousemove',
-      (evt) => this._updateMousePosition(evt),
-      false,
+      listeners[device].move,
+      (evt) => this._updateMousePosition(evt, isTouchDevice()),
+      true,
     );
 
     this.renderer.domElement.addEventListener(
-      'mousedown',
-      () => {
+      listeners[device].down,
+      (evt) => {
+        this._updateMousePosition(evt, isTouchDevice());
         this.mouseDownPosition = {
           ...this.mouse,
         };
@@ -346,7 +366,7 @@ class Ubiety {
     );
 
     this.renderer.domElement.addEventListener(
-      'mouseup',
+      listeners[device].up,
       () => {
         const looseMouse = {
           x: _.round(this.mouse.x, 2),
@@ -424,13 +444,13 @@ class Ubiety {
     this._render();
   }
 
-  _updateMousePosition(evt) {
+  _updateMousePosition(evt, isMobile) {
     const {
       width,
       height,
     } = getSize(this.root);
-    this.mouse.x = (evt.clientX / width) * 2 - 1;
-    this.mouse.y = -(evt.clientY / height) * 2 + 1;
+    this.mouse.x = isMobile ? (evt.touches[0].clientX / width) * 2 - 1 : (evt.clientX / width) * 2 - 1;
+    this.mouse.y = isMobile ? -(evt.touches[0].clientY / height) * 2 + 1 : -(evt.clientY / height) * 2 + 1;
   }
 
   _raycast() {

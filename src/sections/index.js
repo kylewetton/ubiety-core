@@ -75,9 +75,8 @@ class Section {
   }
 
   flash() {
-    const {
-      color,
-    } = flashSettings;
+    const color = this.globalParent.settings.flashColor;
+
     const currentColor = this.currentMaterial.settings.color;
 
     tween({
