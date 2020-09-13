@@ -243,7 +243,7 @@ class Ubiety {
 
         let idx = 0;
         model.traverse((o) => {
-          if (o.isMesh) {
+          if (o.isMesh || o.type === 'Object3D') {
             if (!this.settings.groups.includes(o.parent.name)) {
               const name = o.name.split('|');
               o.name = name[0];
@@ -264,15 +264,17 @@ class Ubiety {
                   childSection.setAbility(o.disabled);
                   section.children.push(childSection);
                 });
+                if (o.type === 'Object3D') this._setupChildOptions(section);
               }
 
               if (
                 this.settings.order.length
                 && o.name === this.settings.order[0]
+                && section.isEnabled()
               ) {
                 section.setActive(true);
                 this.activeSection = section;
-              } else if (idx === 0) {
+              } else if (idx === 0 && section.isEnabled()) {
                 section.setActive(true);
                 this.activeSection = section;
               }
@@ -522,14 +524,44 @@ class Ubiety {
 
   swapColor(hex) {
     const section = this.sections.filter((s) => s.isActive())[0];
-    section.swapColor(hex);
-    this._render();
+    if (section.length) {
+      section.swapColor(hex);
+      this._render();
+    }
   }
 
   swapTexture(txt) {
     const section = this.sections.filter((s) => s.isActive())[0];
     section.swapTexture(txt);
     this._render();
+  }
+
+  swapOption(tag, optionTag = null) {
+    let availableSections = [];
+    const section = this.sections.find((s) => s.getTag() === tag);
+    if (optionTag) {
+      section.setAbility(false);
+    } else {
+      section.setAbility(true);
+    }
+
+    section.children = section.children.map((child) => {
+      if (child.tag === optionTag) {
+        child.setVisibility(true);
+      } else {
+        child.setVisibility(false);
+      }
+      return child;
+    });
+
+    availableSections = this.sections.filter((s) => s.isEnabled());
+    this.ui.sectionCount = availableSections.length;
+
+    if (section.isEnabled()) {
+      this.setActiveSection(section.getTag());
+    } else {
+      this.setActiveSection(availableSections[0].getTag());
+    }
   }
 
   setActiveSection(tag) {
@@ -626,13 +658,35 @@ class Ubiety {
     move(coords, 0);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  _setupChildOptions(section) {
+    const { children } = section;
+    section.setAbility(true);
+    children.forEach((child) => {
+      child.setVisibility(false);
+    });
+  }
+
+  _updateSectionIndexes() {
+    let idx = 0;
+    this.sections = this.sections.map((section) => {
+      if (section.isEnabled()) {
+        section.setIndex(idx);
+        // eslint-disable-next-line no-plusplus
+        idx++;
+      } else {
+        section.setIndex(null);
+      }
+      return section;
+    });
+  }
+
   /**
    * UI Rendering
    * */
 
   _renderSectionSelector() {
     const availableSections = this.sections.filter((section) => section.isEnabled());
-
     this.ui.sectionCount = availableSections.length;
 
     /** Nodes */

@@ -40,6 +40,7 @@ class Section {
     this.children = [];
     this.disabled = mesh.disabled;
     this.isChild = false;
+    this.activeChild = null;
   }
 
   updateMaterial(materialSettings) {
@@ -76,7 +77,6 @@ class Section {
 
   flash() {
     const color = this.globalParent.settings.flashColor;
-
     const currentColor = this.currentMaterial.settings.color;
 
     tween({
@@ -130,6 +130,7 @@ class Section {
 
   setAbility(state) {
     this.disabled = state;
+    this.globalParent._updateSectionIndexes();
   }
 
   setAsChild(parentTag) {
@@ -169,6 +170,10 @@ class Section {
 
   setPersistentTexture(texture) {
     this.persistentTexture = texture;
+  }
+
+  setVisibility(visible) {
+    this.mesh.visible = visible;
   }
 }
 
