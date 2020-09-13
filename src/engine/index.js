@@ -14,20 +14,22 @@ import {
   LoadingManager,
   GammaEncoding,
   Raycaster,
+  Color,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Theme from './Theme';
-import { engineConfig, defaultTheme, spotlightTheme } from '../config';
+import { color } from '../utils';
+import { engineConfig, spotlightTheme } from '../config';
 
 /**
  * SCENE
  */
 
 const { background } = engineConfig.sceneSettings;
-export const getNewScene = () => {
+export const getNewScene = (backgroundColor = background) => {
   const sceneInstance = new Scene();
-  sceneInstance.background = background;
+  sceneInstance.background = new Color(backgroundColor);
   return sceneInstance;
 };
 

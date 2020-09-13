@@ -100,7 +100,7 @@ class Ubiety {
      * A ThreeJS scene, the main 3D scene rendered in the canvas.
      * @type {Class}
      */
-    this.scene = getNewScene();
+    this.scene = getNewScene(this.settings.backgroundColor);
 
     /**
      * A ThreeJS WebGLRenderer. Settings for this renderer can be found in the config file.

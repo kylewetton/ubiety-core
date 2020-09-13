@@ -1,10 +1,9 @@
 import {
   Math as ThreeMath,
   LinearToneMapping,
+  ReinhardToneMapping,
 } from 'three';
 
-// eslint-disable-next-line import/no-cycle
-import { color } from '../utils';
 // eslint-disable-next-line import/no-cycle
 
 export const APP_NAME = 'Ubiety';
@@ -29,7 +28,7 @@ export const defaults = {
  */
 export const engineConfig = {
   sceneSettings: {
-    background: color('#f1f3f4'),
+    background: '#f1f3f4',
   },
   cameraSettings: {
     fov: 30,
@@ -96,9 +95,9 @@ export const defaultTheme = {
   },
 };
 
-const spotlightIntensity = 10;
+const spotlightIntensity = 13;
 const spotlightDistance = 10;
-const spotlightHeightReduction = 1;
+const spotlightHeightReduction = 3;
 const spotlightHeight = spotlightDistance - spotlightHeightReduction;
 
 export const spotlightTheme = {
