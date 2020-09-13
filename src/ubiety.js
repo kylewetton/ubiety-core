@@ -539,9 +539,9 @@ class Ubiety {
   swapOption(tag, optionTag = null) {
     let availableSections = [];
     const section = this.sections.find((s) => s.getTag() === tag);
-    if (optionTag) {
+    if (section.isDisabled() && optionTag) {
       section.setAbility(false);
-    } else {
+    } else if (section.isEnabled() && !optionTag) {
       section.setAbility(true);
     }
 
@@ -555,13 +555,14 @@ class Ubiety {
     });
 
     availableSections = this.sections.filter((s) => s.isEnabled());
-    this.ui.sectionCount = availableSections.length;
 
-    if (section.isEnabled()) {
+    this.ui.sectionCount = availableSections.length;
+    if (optionTag) {
       this.setActiveSection(section.getTag());
     } else {
       this.setActiveSection(availableSections[0].getTag());
     }
+    this._render();
   }
 
   setActiveSection(tag) {
