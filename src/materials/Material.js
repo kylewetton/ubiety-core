@@ -199,8 +199,10 @@ class Material {
     return persistentTexture || {};
   }
 
-  swapColor(color) {
-    this.settings.color = color;
+  swapColor(color, _updateMaterialCache = true) {
+    if (_updateMaterialCache) {
+      this.settings.color = color;
+    }
     this.material.setValues({
       color: linearColor(color),
     });

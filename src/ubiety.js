@@ -326,6 +326,7 @@ class Ubiety {
     this.modelManager.onLoad = () => {
       this._createEvents();
       this._buildEngine();
+      this._updateSectionIndexes();
       this._buildCoreUI();
     };
   }
@@ -752,8 +753,6 @@ class Ubiety {
       this.ui.sectionCount
     }`;
   }
-
-  log() {}
 }
 
 export default Ubiety;

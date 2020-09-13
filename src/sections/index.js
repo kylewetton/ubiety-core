@@ -61,7 +61,7 @@ class Section {
   }
 
   swapColor(hex, _updateMaterialCache = true) {
-    this.currentMaterial.swapColor(hex);
+    this.currentMaterial.swapColor(hex, _updateMaterialCache);
     if (_updateMaterialCache) {
       this.materialAsSettings.color = hex;
     }
