@@ -276,6 +276,11 @@ class Ubiety {
                 section.setActive(true);
                 this.activeSection = section;
               }
+              document.dispatchEvent(
+                new CustomEvent('Ubiety:sectionChange', {
+                  detail: this.activeSection,
+                }),
+              );
 
               section.updateMaterial({
                 ...materialSettings,
