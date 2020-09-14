@@ -84,7 +84,7 @@ class Theme {
       );
 
       directionalLight.shadow.camera.near = 0.1;
-      directionalLight.shadow.camera.far = 100;
+      directionalLight.shadow.camera.far = 500;
       directionalLight.shadow.camera.left = d * -1;
       directionalLight.shadow.camera.right = d;
       directionalLight.shadow.camera.top = d;
@@ -101,6 +101,11 @@ class Theme {
       } = light.position;
       const spotLight = new SpotLight(light.color, light.intensity);
       spotLight.position.set(x, y, z);
+      spotLight.castShadow = light.shadows;
+      spotLight.shadow.mapSize = new Vector2(
+        light.mapSize,
+        light.mapSize,
+      );
       this.lights.push(spotLight);
     });
   }

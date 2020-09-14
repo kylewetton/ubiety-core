@@ -21,6 +21,7 @@ export const defaults = {
   groups: [],
   persistentTextures: [],
   scale: 1,
+  realtimeShadows: false,
 };
 
 /**
@@ -74,8 +75,8 @@ export const defaultTheme = {
       color: 0xffffff,
       intensity: 1,
       position: { x: -5, y: 16, z: 0 },
-      shadows: false,
-      mapSize: 4,
+      shadows: true,
+      mapSize: 1024,
     },
     {
       id: 'directional',
@@ -83,7 +84,7 @@ export const defaultTheme = {
       intensity: 1,
       position: { x: 5, y: 16, z: 0 },
       shadows: false,
-      mapSize: 4,
+      mapSize: 1024,
     },
   ],
   floor: {
@@ -114,30 +115,40 @@ export const spotlightTheme = {
       color: 0xffffff,
       position: { x: 0, y: spotlightDistance + spotlightHeightReduction, z: 0 },
       intensity: spotlightIntensity - spotlightIntensity / 3,
+      mapSize: 1024,
+      shadows: false,
     },
     {
       id: 'spot',
       color: 0xffffff,
       position: { x: spotlightDistance, y: spotlightHeight, z: 0 },
       intensity: spotlightIntensity,
+      mapSize: 2048 * 2,
+      shadows: false,
     },
     {
       id: 'spot',
       color: 0xffffff,
       position: { x: spotlightDistance * -1, y: spotlightHeight, z: 0 },
       intensity: spotlightIntensity,
+      mapSize: 1024,
+      shadows: false,
     },
     {
       id: 'spot',
       color: 0xffffff,
       position: { x: 0, y: spotlightHeight, z: spotlightDistance },
       intensity: spotlightIntensity,
+      mapSize: 1024,
+      shadows: false,
     },
     {
       id: 'spot',
       color: 0xffffff,
       position: { x: 0, y: spotlightHeight, z: spotlightDistance * -1 },
       intensity: spotlightIntensity,
+      mapSize: 1024,
+      shadows: false,
     },
   ],
   floor: {

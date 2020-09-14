@@ -243,6 +243,10 @@ class Ubiety {
 
         let idx = 0;
         model.traverse((o) => {
+          if (o.isMesh && this.settings.realtimeShadows) {
+            o.receiveShadow = true;
+            o.castShadow = true;
+          }
           if (o.isMesh || o.type === 'Object3D') {
             if (!this.settings.groups.includes(o.parent.name)) {
               const name = o.name.split('|');

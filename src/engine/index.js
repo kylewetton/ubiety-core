@@ -14,13 +14,13 @@ import {
   LoadingManager,
   GammaEncoding,
   Raycaster,
+  PCFSoftShadowMap,
   Color,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Theme from './Theme';
-import { color } from '../utils';
-import { engineConfig, spotlightTheme } from '../config';
+import { engineConfig, spotlightTheme, defaultTheme } from '../config';
 
 /**
  * SCENE
@@ -66,6 +66,8 @@ export const getNewRenderer = () => {
   rendererInstance.powerPreference = 'high-performance';
   rendererInstance.setPixelRatio(pixelRatio);
   rendererInstance.toneMapping = toneMapping;
+  rendererInstance.shadowMap.enabled = true;
+  rendererInstance.shadowMap.type = PCFSoftShadowMap;
   return rendererInstance;
 };
 
