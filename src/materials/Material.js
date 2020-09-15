@@ -11,7 +11,6 @@ import {
   v4 as uuidv4,
 } from 'uuid';
 import {
-  MeshPhongMaterial,
   MeshPhysicalMaterial,
   CubeTextureLoader,
   LoadingManager,
@@ -30,6 +29,7 @@ import {
 
 const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
+const cubeTextureLoader = new CubeTextureLoader(textureLoadManager);
 
 const getTexturePack = (pack) => {
   const {
@@ -53,7 +53,6 @@ const getTexturePack = (pack) => {
     normal: 'normalMap',
     roughness: 'roughnessMap',
     alpha: 'alphaMap',
-    specular: 'specularMap',
   };
 
   _.forOwn(maps, (value, key) => {
@@ -88,8 +87,8 @@ const defaults = {
   color: '#f1f1f1',
   opacity: 1.0,
   transparent: false,
-  doubleSided: false, // !
-  roughness: 0,
+  doubleSided: false,
+  roughness: 1,
   metal: false,
   texture: {
     tag: '',
@@ -98,14 +97,12 @@ const defaults = {
     color: false,
     normal: false,
     roughness: false,
-    specular: false,
   },
-  aoIntensity: 1,
+  aoMapIntensity: 1,
   normalIntensity: 1,
-  shininess: 30,
-  specular: '#111111',
-  reflectivity: 3,
-  envMapIntensity: 1.5,
+  reflectivity: 0.5,
+  envMapIntensity: 1,
+  disableEnvMap: false,
 };
 
 class Material {
@@ -137,7 +134,7 @@ class Material {
       };
     }
 
-    const r = `${TEXTURE_PATH}/cubemap/`;
+    const r = `${TEXTURE_PATH}/cubemap/${this.globalParent.settings.studioType}/`;
     const urls = [
       `${r}px.png`,
       `${r}nx.png`,
@@ -146,9 +143,7 @@ class Material {
       `${r}pz.png`,
       `${r}nz.png`,
     ];
-    const textureCube = this.settings.metal
-      ? new CubeTextureLoader(textureLoadManager).load(urls)
-      : null;
+    const textureCube = cubeTextureLoader.load(urls);
 
     const overrides = this._getOverrides();
 
@@ -165,16 +160,16 @@ class Material {
       specular,
       color,
       doubleSided,
+      disableEnvMap,
       normalIntensity,
       ...shapedSettings
     } = settings;
 
     shapedSettings.color = linearColor(color);
     shapedSettings.metalness = metal ? 1.0 : 0;
-    shapedSettings.specular = linearColor(specular);
     shapedSettings.side = doubleSided ? DoubleSide : FrontSide;
     shapedSettings.normalScale = new Vector2(normalIntensity, normalIntensity);
-    shapedSettings.envMap = textureCube || null;
+    shapedSettings.envMap = disableEnvMap ? null : textureCube;
 
     const texturePack = getTexturePack(texture);
     shapedSettings.transparent = _.has(texturePack, 'alphaMap') && true;
@@ -186,10 +181,7 @@ class Material {
   }
 
   _buildMaterial(shapedSettings) {
-    const material = this.settings.metal
-      ? new MeshPhysicalMaterial(shapedSettings)
-      : new MeshPhongMaterial(shapedSettings);
-    this.material = material;
+    this.material = new MeshPhysicalMaterial(shapedSettings);
   }
 
   _getOverrides() {
@@ -224,7 +216,6 @@ class Material {
       ...pack,
       ...rest,
     };
-    console.log(newValues);
     this.material.setValues({
       ...newValues,
     });

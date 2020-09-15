@@ -10,6 +10,8 @@ import {
   tween,
 } from 'shifty';
 import {
+  PMREMGenerator,
+  UnsignedByteType,
   Math as ThreeMath,
 } from 'three';
 import './styles/index.scss';
@@ -26,6 +28,8 @@ import {
 import {
   SSAOPass,
 } from 'three/examples/jsm/postprocessing/SSAOPass';
+
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 import Stats from 'three/examples/jsm/libs/stats.module';
 import {
@@ -413,7 +417,29 @@ class Ubiety {
       width,
       height,
     } = getSize(this.root);
-    lights.forEach((light) => this.scene.add(light));
+    if (!this.settings.hdrMap) {
+      lights.forEach((light) => this.scene.add(light));
+    } else {
+      this.renderer.toneMappingExposure = this.settings.hdrExposure || 1;
+      const pmremGenerator = new PMREMGenerator(this.renderer);
+      pmremGenerator.compileEquirectangularShader();
+
+      new RGBELoader()
+        .setDataType(UnsignedByteType)
+        .setPath('public/')
+        .load(`${this.settings.hdrMap}.hdr`, (texture) => {
+          const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+          if (this.settings.hdrRenderBackground) {
+            this.scene.background = envMap;
+          }
+          this.scene.environment = envMap;
+
+          texture.dispose();
+          pmremGenerator.dispose();
+
+          this._render();
+        });
+    }
 
     this.root.appendChild(this.renderer.domElement);
     this.effectComposer.addPass(this.renderPass);

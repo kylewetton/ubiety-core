@@ -1,7 +1,8 @@
 import {
   Math as ThreeMath,
   LinearToneMapping,
-  ReinhardToneMapping,
+  ACESFilmicToneMapping,
+  GammaEncoding,
 } from 'three';
 
 // eslint-disable-next-line import/no-cycle
@@ -22,6 +23,7 @@ export const defaults = {
   persistentTextures: [],
   scale: 1,
   realtimeShadows: false,
+  studioType: 'medium-studio',
 };
 
 /**

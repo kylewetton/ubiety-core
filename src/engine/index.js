@@ -13,6 +13,7 @@ import {
   WebGLRenderer,
   LoadingManager,
   GammaEncoding,
+  sRGBEncoding,
   Raycaster,
   PCFSoftShadowMap,
   Color,
@@ -20,7 +21,7 @@ import {
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Theme from './Theme';
-import { engineConfig, spotlightTheme, defaultTheme } from '../config';
+import { engineConfig, spotlightTheme } from '../config';
 
 /**
  * SCENE
@@ -61,7 +62,7 @@ export const getNewRenderer = () => {
     ...engineConfig.rendererSettings.constructor,
   });
   rendererInstance.gammaFactor = gammaFactor;
-  rendererInstance.outputEncoding = GammaEncoding;
+  rendererInstance.outputEncoding = sRGBEncoding;
   rendererInstance.physicallyCorrectLights = true;
   rendererInstance.powerPreference = 'high-performance';
   rendererInstance.setPixelRatio(pixelRatio);
