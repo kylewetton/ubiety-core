@@ -19,6 +19,7 @@ import {
   Color,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Theme from './Theme';
 import { engineConfig, spotlightTheme } from '../config';
@@ -52,6 +53,14 @@ export const getNewCamera = (fov = fovDef, near = nearDef, far = farDef) => {
 };
 
 /**
+ * AR CAMERA
+ */
+
+/**
+ * INSTANT WORLD TRACKER
+ */
+
+/**
  * RENDERER
  */
 
@@ -62,7 +71,7 @@ export const getNewRenderer = () => {
     ...engineConfig.rendererSettings.constructor,
   });
   rendererInstance.gammaFactor = gammaFactor;
-  rendererInstance.outputEncoding = sRGBEncoding;
+  rendererInstance.outputEncoding = GammaEncoding;
   rendererInstance.physicallyCorrectLights = true;
   rendererInstance.powerPreference = 'high-performance';
   rendererInstance.setPixelRatio(pixelRatio);
@@ -77,6 +86,7 @@ export const getNewRenderer = () => {
  */
 
 export const getGLTFLoader = (manager) => new GLTFLoader(manager);
+export const getGLTFExporter = () => new GLTFExporter();
 
 /**
  * LOADING MANAGER

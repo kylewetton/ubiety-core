@@ -50,6 +50,7 @@ import {
   getNewCamera,
   getNewLoadingManager,
   getGLTFLoader,
+  getGLTFExporter,
   getNewControls,
   getNewRaycaster,
   theme,
@@ -129,6 +130,12 @@ class Ubiety {
      * @type {Class}
      */
     this.gltfLoader = getGLTFLoader(this.modelManager);
+
+    /**
+     * A GLTFExporter, a module used to export the model file
+     * @type {Class}
+     */
+    this.gltfExporter = getGLTFExporter();
 
     /**
      * An instance of OrbitControls. Settings for these controls are found in the config file.
@@ -220,6 +227,7 @@ class Ubiety {
     this.materials = {};
     this.events = {};
     this.initialMaterialsLoaded = false;
+    this.inArMode = false;
   }
 
   /**
@@ -547,6 +555,10 @@ class Ubiety {
       this._render();
     }
     this.controls.update();
+    if (this.inArMode) {
+      this.arCamera.updateFrame(this.renderer);
+      this._render(true);
+    }
   }
 
   /**
@@ -555,7 +567,7 @@ class Ubiety {
 
   swapColor(hex) {
     const section = this.sections.filter((s) => s.isActive())[0];
-    if (section.length) {
+    if (section) {
       section.swapColor(hex);
       this._render();
     }
@@ -713,6 +725,36 @@ class Ubiety {
     });
   }
 
+  launchAR(excludes = [], scale = 1) {
+    this._exportGLTF(excludes, scale).then((glb) => {
+      const fd = new FormData();
+      const name = Date.now();
+      fd.append('name', name);
+      fd.append('glb', new Blob([glb]));
+      fetch('/ubiety-ar', {
+        method: 'POST',
+        body: fd,
+      }).then(() => {
+        const link = document.createElement('a');
+        link.rel = 'ar';
+        link.innerHTML = '<img src="ar.png" />';
+        link.href = `ar-${name}.usdz`;
+        link.click();
+      });
+    });
+  }
+
+  _exportGLTF(excludes, scale) {
+    return new Promise((res, rej) => {
+      const cleaned = _.defaultsDeep({}, this.model);
+      cleaned.parent = null;
+      cleaned.children = cleaned.children.filter((child) => !excludes.includes(child.name));
+      cleaned.scale = { x: scale, y: scale, z: scale };
+      this.gltfExporter.parse(cleaned, (gltf) => {
+        res(gltf);
+      }, { binary: true });
+    });
+  }
   /**
    * UI Rendering
    * */
