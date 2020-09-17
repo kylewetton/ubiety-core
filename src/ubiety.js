@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * The main class for building a Ubiety instance
  *
@@ -14,6 +15,7 @@ import {
   UnsignedByteType,
   Math as ThreeMath,
 } from 'three';
+
 import './styles/index.scss';
 
 /**
@@ -725,21 +727,39 @@ class Ubiety {
     });
   }
 
+  /**
+   * Augmented Reality
+   */
+
   launchAR(excludes = [], scale = 1) {
+    document.dispatchEvent(new Event('Ubiety:processingAR'));
     this._exportGLTF(excludes, scale).then((glb) => {
       const fd = new FormData();
-      const name = Date.now();
-      fd.append('name', name);
       fd.append('glb', new Blob([glb]));
       fetch('/ubiety-ar', {
         method: 'POST',
         body: fd,
-      }).then(() => {
+      }).then((res) => res.json()).then((data) => {
+        const { name } = data;
+        const isAndroid = /android/i.test(navigator.userAgent);
         const link = document.createElement('a');
-        link.rel = 'ar';
-        link.innerHTML = '<img src="ar.png" />';
-        link.href = `ar-${name}.usdz`;
-        link.click();
+
+        if (isAndroid) {
+          link.href = `intent://arvr.google.com/scene-viewer/1.0?file=${window.location.origin}/ar-${name}.glb&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${window.location.origin};end;`;
+        } else {
+          link.href = `ar/ar-${name}.usdz`;
+          link.rel = 'ar';
+          link.innerHTML = '<img src="ar.png" />';
+        }
+        if (isTouchDevice()) {
+          link.click();
+          document.dispatchEvent(new Event('Ubiety:lauchingAR'));
+        } else {
+          document.dispatchEvent(new Event('Ubiety:lauchingAR'));
+          document.dispatchEvent(new CustomEvent('Ubiety:QRCodeReady', {
+            detail: this._getQRCodeForARFile(`${name}.usdz`),
+          }));
+        }
       });
     });
   }
@@ -755,6 +775,13 @@ class Ubiety {
       }, { binary: true });
     });
   }
+
+  _getQRCodeForARFile(file) {
+    const base = window.location.origin;
+    const api = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${base}/ar/ar-${file}`;
+    return api;
+  }
+
   /**
    * UI Rendering
    * */
