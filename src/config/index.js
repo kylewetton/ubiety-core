@@ -9,7 +9,7 @@ import {
 
 export const APP_NAME = 'Ubiety';
 export const BRAND_COLOR = '#11864a';
-export const TEXTURE_PATH = './public/textures';
+export const TEXTURE_PATH = './ubiety/textures';
 
 /**
  * Default config for the Ubiety class
@@ -24,6 +24,7 @@ export const defaults = {
   scale: 1,
   realtimeShadows: false,
   studioType: 'medium-studio',
+  headlessMode: false
 };
 
 /**
@@ -45,7 +46,7 @@ export const engineConfig = {
       preserveDrawingBuffer: true,
     },
     gammaFactor: 2.2,
-    toneMapping: LinearToneMapping,
+    toneMapping: GammaEncoding,
   },
   controlSettings: {
     enableDampening: true,
@@ -98,7 +99,7 @@ export const defaultTheme = {
   },
 };
 
-const spotlightIntensity = 13;
+const spotlightIntensity = 10;
 const spotlightDistance = 10;
 const spotlightHeightReduction = 3;
 const spotlightHeight = spotlightDistance - spotlightHeightReduction;

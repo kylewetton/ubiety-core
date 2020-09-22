@@ -70,7 +70,8 @@ export const getNewRenderer = () => {
   const rendererInstance = new WebGLRenderer({
     ...engineConfig.rendererSettings.constructor,
   });
-  rendererInstance.gammaFactor = gammaFactor;
+  //  rendererInstance.gammaFactor = gammaFactor;
+  rendererInstance.toneMappingExposure = 1;
   rendererInstance.outputEncoding = GammaEncoding;
   rendererInstance.physicallyCorrectLights = true;
   rendererInstance.powerPreference = 'high-performance';

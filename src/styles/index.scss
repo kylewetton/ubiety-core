@@ -4,13 +4,19 @@
 
 .ubiety {
   &__section-selector {
-    position: absolute;
-    bottom: 4rem;
-    left: 2rem;
+    * {
+      line-height: 1;
+    }
+
     z-index: 2;
     display: flex;
     border-radius: 2px;
     overflow: hidden;
+  }
+  &__section-selector.pin {
+    position: absolute;
+    bottom: 4rem;
+    left: 2rem;
   }
   &__breadcrumb {
     font-size: 0.75rem;

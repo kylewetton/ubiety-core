@@ -19,6 +19,7 @@ import {
   DoubleSide,
   Vector2,
   FrontSide,
+  sRGBEncoding,
 } from 'three';
 import {
   color as linearColor,
@@ -70,6 +71,10 @@ const getTexturePack = (pack) => {
 
       if (!flip) {
         texture.flipY = false;
+      }
+
+      if (key === 'color') {
+        texture.encoding = sRGBEncoding;
       }
 
       texturePack[dict[key]] = texture;

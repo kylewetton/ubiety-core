@@ -79,6 +79,14 @@ class Ubiety {
    * @param {Object}  settings   - Optional. Options to change default behaviour.
    */
   constructor(root, modelPath, settings = {}) {
+
+        /**
+     * Settings, deep merged with the defaults Object found in the config file.
+     * @type {Object}
+     */
+    this.settings = _.defaultsDeep({}, settings, defaults);
+
+
     /**
      * The root element that Ubiety will append a child to, this element's height
      * and width will be used to determine the canvas size itself. The canvas
@@ -86,10 +94,12 @@ class Ubiety {
      * @type Element
      */
     this.root = root instanceof Element ? root : document.querySelector(root);
-    isElement(
-      this.root,
-      "Couldn't find the root element. Make sure it exists.",
-    );
+    if (!this.settings.headlessMode) {
+      isElement(
+        this.root,
+        "Couldn't find the root element. Make sure it exists.",
+      );
+  }
 
     /**
      * A path to the .gLTF/.glb model to be loaded on initialization of this class.
@@ -97,11 +107,6 @@ class Ubiety {
      */
     this.modelPath = exists(modelPath, 'Please provide a path to the model.');
 
-    /**
-     * Settings, deep merged with the defaults Object found in the config file.
-     * @type {Object}
-     */
-    this.settings = _.defaultsDeep({}, settings, defaults);
 
     /**
      * A ThreeJS scene, the main 3D scene rendered in the canvas.
@@ -230,6 +235,7 @@ class Ubiety {
     this.events = {};
     this.initialMaterialsLoaded = false;
     this.inArMode = false;
+    this.frozen = false;
   }
 
   /**
@@ -237,7 +243,7 @@ class Ubiety {
    * */
 
   mount() {
-    this.root.style.cssText += 'height: 100%; position: relative';
+    if (this.root) this.root.style.cssText += 'height: 100%; position: relative';
 
     if (this.debug) {
       this.gui = new GUI();
@@ -296,11 +302,6 @@ class Ubiety {
                 section.setActive(true);
                 this.activeSection = section;
               }
-              document.dispatchEvent(
-                new CustomEvent('Ubiety:sectionChange', {
-                  detail: this.activeSection,
-                }),
-              );
 
               section.updateMaterial({
                 ...materialSettings,
@@ -327,6 +328,11 @@ class Ubiety {
         this.model = model;
 
         this.scene.add(this.model);
+        document.dispatchEvent(
+          new CustomEvent('Ubiety:sectionChange', {
+            detail: this.activeSection,
+          }),
+        );
       },
       (xhr) => {
         /**
@@ -342,10 +348,13 @@ class Ubiety {
     );
 
     this.modelManager.onLoad = () => {
-      this._createEvents();
-      this._buildEngine();
-      this._updateSectionIndexes();
-      this._buildCoreUI();
+      if (!this.settings.headlessMode) {
+        this._createEvents();
+        this._buildEngine();
+        this._updateSectionIndexes();
+        this._buildCoreUI();
+      }
+      console.log(this);
     };
   }
 
@@ -436,7 +445,7 @@ class Ubiety {
 
       new RGBELoader()
         .setDataType(UnsignedByteType)
-        .setPath('public/')
+        .setPath('ubiety/')
         .load(`${this.settings.hdrMap}.hdr`, (texture) => {
           const envMap = pmremGenerator.fromEquirectangular(texture).texture;
           if (this.settings.hdrRenderBackground) {
@@ -542,13 +551,15 @@ class Ubiety {
   }
 
   _render() {
-    if (this.debug) {
-      this.stats.begin();
-      this.effectComposer.render();
-      this.stats.end();
-    } else {
-      this.effectComposer.render();
-    }
+    if (!this.settings.headlessMode) {
+      if (this.debug) {
+        this.stats.begin();
+        this.effectComposer.render();
+        this.stats.end();
+      } else {
+        this.effectComposer.render();
+      }
+  }
   }
 
   _loop() {
@@ -611,6 +622,7 @@ class Ubiety {
   }
 
   setActiveSection(tag) {
+    if (!this.frozen) {
     const updateSections = this.sections.map((section) => {
       if (tag === section.tag && section.isEnabled()) {
         section.setActive(true);
@@ -629,6 +641,7 @@ class Ubiety {
         detail: this.activeSection,
       }),
     );
+    }
   }
 
   nextSection() {
@@ -727,6 +740,14 @@ class Ubiety {
     });
   }
 
+  freezeControl() {
+    this.frozen = true;
+  }
+
+  unfreezeControl() {
+    this.frozen = false;
+  }
+
   /**
    * Augmented Reality
    */
@@ -745,11 +766,11 @@ class Ubiety {
         const link = document.createElement('a');
 
         if (isAndroid) {
-          link.href = `intent://arvr.google.com/scene-viewer/1.0?file=${window.location.origin}/ar-${name}.glb&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${window.location.origin};end;`;
+          link.href = `intent://arvr.google.com/scene-viewer/1.0?file=${window.location.origin}/ubiety/ar/ar-${name}.glb&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${window.location.origin};end;`;
         } else {
-          link.href = `ar/ar-${name}.usdz`;
+          link.href = `ubiety/ar/ar-${name}.usdz`;
           link.rel = 'ar';
-          link.innerHTML = '<img src="ar.png" />';
+          link.innerHTML = '<img src="ubiety/ar.png" />';
         }
         if (isTouchDevice()) {
           link.click();
@@ -778,7 +799,7 @@ class Ubiety {
 
   _getQRCodeForARFile(file) {
     const base = window.location.origin;
-    const api = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${base}/ar/ar-${file}`;
+    const api = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${base}/ubiety/ar/ar-${file}`;
     return api;
   }
 
@@ -787,6 +808,7 @@ class Ubiety {
    * */
 
   _renderSectionSelector() {
+    const selectorParent = this.settings.selectorParent || this.root;
     const availableSections = this.sections.filter((section) => section.isEnabled());
     this.ui.sectionCount = availableSections.length;
 
@@ -842,8 +864,12 @@ class Ubiety {
     uiSelectorWrapper.appendChild(uiSelectorColLeft);
     uiSelectorWrapper.appendChild(uiSelectorColRight);
 
-    this.root.appendChild(uiSelectorWrapper);
+    if (selectorParent === this.root) {
+      uiSelectorWrapper.classList.add('pin');
+    }
+    selectorParent.appendChild(uiSelectorWrapper);
     this._updateSectionSelector();
+    window.dispatchEvent(new Event('resize'));
   }
 
   _updateSectionSelector() {
