@@ -56,6 +56,7 @@ const getTexturePack = (pack) => {
     alpha: 'alphaMap',
   };
 
+
   _.forOwn(maps, (value, key) => {
     if (value) {
       let texture;
@@ -69,9 +70,7 @@ const getTexturePack = (pack) => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
 
-      if (!flip) {
-        texture.flipY = false;
-      }
+        texture.flipY = flip;
 
       if (key === 'color') {
         texture.encoding = sRGBEncoding;
@@ -89,7 +88,7 @@ const getTexturePack = (pack) => {
 const defaults = {
   tag: 'default',
   type: 'standard',
-  color: '#f1f1f1',
+  color: '#ffffff',
   opacity: 1.0,
   transparent: false,
   doubleSided: false,
@@ -148,7 +147,7 @@ class Material {
       `${r}pz.png`,
       `${r}nz.png`,
     ];
-    const textureCube = cubeTextureLoader.load(urls);
+    this.textureCube = cubeTextureLoader.load(urls);
 
     const overrides = this._getOverrides();
 
@@ -157,10 +156,19 @@ class Material {
       ...overrides,
     };
 
+    const texturePack = getTexturePack(settings.texture);
+    const shapedSettings = this._shapeSettings(settings, texturePack);
+
+    this._buildMaterial({
+      ...shapedSettings,
+      ...texturePack,
+    });
+  }
+
+  _shapeSettings(settings, texturePack) {
     const {
       type,
       tag,
-      texture,
       metal,
       specular,
       color,
@@ -174,15 +182,10 @@ class Material {
     shapedSettings.metalness = metal ? 1.0 : 0;
     shapedSettings.side = doubleSided ? DoubleSide : FrontSide;
     shapedSettings.normalScale = new Vector2(normalIntensity, normalIntensity);
-    shapedSettings.envMap = disableEnvMap ? null : textureCube;
-
-    const texturePack = getTexturePack(texture);
+    shapedSettings.envMap = disableEnvMap ? null : this.textureCube;
     shapedSettings.transparent = _.has(texturePack, 'alphaMap') && true;
 
-    this._buildMaterial({
-      ...shapedSettings,
-      ...texturePack,
-    });
+    return shapedSettings;
   }
 
   _buildMaterial(shapedSettings) {
@@ -211,18 +214,29 @@ class Material {
       texture: txt,
       ...rest
     } = payload;
+    this.settings = _.defaultsDeep({}, payload, this.settings);
     const overrides = this._getOverrides();
-    const pack = getTexturePack({
+    
+    /**
+     * A pack of loaded image Textures 
+     * – alpha
+     * – ao
+     * – map 
+     * – normal
+     * – roughness
+     */
+
+    const texturePack = getTexturePack({
       ...def,
       ...txt,
       ...overrides.texture,
     });
-    const newValues = {
-      ...pack,
-      ...rest,
-    };
+
+    const shapedSettings = this._shapeSettings(rest, texturePack);
+  
     this.material.setValues({
-      ...newValues,
+      ...texturePack,
+      ...shapedSettings,
     });
     this.material.needsUpdate = true;
   }

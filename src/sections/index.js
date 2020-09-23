@@ -69,7 +69,8 @@ class Section {
   }
 
   swapTexture(txt) {
-    const newSettings = _.defaultsDeep({}, txt, this.materialAsSettings);
+    const newSettings = txt.dynamic ? _.defaultsDeep({}, txt, this.materialAsSettings) : txt;
+    newSettings.color = this.materialAsSettings.color;
     this.currentMaterial.swapTexture(newSettings);
     this.children.forEach((child) => child.swapTexture(txt));
     this.materialAsSettings = newSettings;

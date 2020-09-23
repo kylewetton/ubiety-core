@@ -354,7 +354,6 @@ class Ubiety {
         this._updateSectionIndexes();
         this._buildCoreUI();
       }
-      console.log(this);
     };
   }
 
@@ -580,8 +579,9 @@ class Ubiety {
 
   swapColor(hex) {
     const section = this.sections.filter((s) => s.isActive())[0];
+    const hasCustomImage = section.materialAsSettings.texture.url;
     if (section) {
-      section.swapColor(hex);
+      section.swapColor(hasCustomImage ? '#FFFFFF' : hex);
       this._render();
     }
   }
