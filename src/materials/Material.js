@@ -127,17 +127,23 @@ class Material {
     return this.material;
   }
 
+  _onTextureLoaded() {
+   document.dispatchEvent(new Event('Ubiety:onLoad'));
+   this.globalParent.initialMaterialsLoaded = true;
+   this.globalParent._render();
+
+  }
+
+  _getBatchToLoad() {
+    return this.batchToLoad;
+  }
+
   _init() {
     if (this.globalParent) {
       const firedOnLoadEvent = this.globalParent.initialMaterialsLoaded;
-      textureLoadManager.onLoad = () => {
-        if (!firedOnLoadEvent) {
-          document.dispatchEvent(new Event('Ubiety:onLoad'));
-          this.globalParent.initialMaterialsLoaded = true;
-        }
-
-        this.globalParent._render();
-      };
+      if (!firedOnLoadEvent) {
+        textureLoadManager.onLoad = () => {this._onTextureLoaded()};
+      }
     }
 
     const r = `${TEXTURE_PATH}/cubemap/${this.globalParent.settings.studioType}/`;
@@ -246,7 +252,6 @@ class Material {
       ...texturePack,
       ...shapedSettings,
     });
-    console.log('Values set', this);
     this.material.needsUpdate = true;
   }
 }
