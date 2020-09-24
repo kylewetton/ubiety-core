@@ -579,7 +579,17 @@ class Ubiety {
 
   swapColor(hex) {
     const section = this.sections.filter((s) => s.isActive())[0];
-    const hasCustomImage = section.materialAsSettings.texture.url;
+    let hasCustomImage = false;
+
+    if (
+      'texture' in section.materialAsSettings &&
+        'url' in section.materialAsSettings.texture &&
+        section.materialSettings.texture.url
+        ) {
+          
+        hasCustomImage = true;
+    }
+
     if (section) {
       section.swapColor(hasCustomImage ? '#FFFFFF' : hex);
       this._render();

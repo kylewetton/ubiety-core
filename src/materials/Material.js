@@ -58,6 +58,7 @@ const getTexturePack = (pack) => {
 
 
   _.forOwn(maps, (value, key) => {
+    
     if (value) {
       let texture;
       if (key === 'color' && url) {
@@ -70,7 +71,7 @@ const getTexturePack = (pack) => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
 
-        texture.flipY = flip;
+      texture.flipY = flip ? true : false;
 
       if (key === 'color') {
         texture.encoding = sRGBEncoding;
@@ -96,11 +97,11 @@ const defaults = {
   metal: false,
   texture: {
     tag: '',
-    alpha: false,
-    ao: false,
-    color: false,
-    normal: false,
-    roughness: false,
+    alpha: null,
+    ao: null,
+    color: null,
+    normal: null,
+    roughness: null,
   },
   aoMapIntensity: 1,
   normalIntensity: 1,
@@ -118,6 +119,7 @@ class Material {
     this.settings = _.defaultsDeep({}, settings, defaults);
     this.cache = {};
     this.globalParent = globalParent;
+    this.batchToLoad = null;
     this._init();
   }
 
@@ -189,7 +191,8 @@ class Material {
   }
 
   _buildMaterial(shapedSettings) {
-    this.material = new MeshPhysicalMaterial(shapedSettings);
+    const {texture, ...settings} = shapedSettings;
+    this.material = new MeshPhysicalMaterial(settings);
   }
 
   _getOverrides() {
@@ -234,10 +237,16 @@ class Material {
 
     const shapedSettings = this._shapeSettings(rest, texturePack);
   
+    this.batchToLoad = {
+      ...texturePack,
+      ...shapedSettings,
+    };
+
     this.material.setValues({
       ...texturePack,
       ...shapedSettings,
     });
+    console.log('Values set', this);
     this.material.needsUpdate = true;
   }
 }
