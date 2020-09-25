@@ -50,10 +50,10 @@ class Section {
 
     this.materialAsSettings = settings;
 
-    const material = new Material(settings, this.tag, this.globalParent);
+    const material = new Material(settings, this.tag, this.globalParent, this);
 
     this.currentMaterial = material;
-    this.mesh.material = material.apply();
+    // this.mesh.material = material.apply();
 
     this.children.forEach((child) => {
       child.updateMaterial(materialSettings);

@@ -32,60 +32,6 @@ const textureLoadManager = new LoadingManager();
 const textureLoader = new TextureLoader(textureLoadManager);
 const cubeTextureLoader = new CubeTextureLoader(textureLoadManager);
 
-const getTexturePack = (pack) => {
-  const {
-    folder,
-    tag,
-    repeat,
-    flip,
-    url,
-    ...maps
-  } = pack;
-  const path = `${TEXTURE_PATH}/${folder}/`;
-  const scale = repeat > 1 ? repeat : 1;
-  const texturePack = {};
-
-  /**
-   * Dict renames the values to spread maps into material
-   */
-  const dict = {
-    color: 'map',
-    ao: 'aoMap',
-    normal: 'normalMap',
-    roughness: 'roughnessMap',
-    alpha: 'alphaMap',
-  };
-
-
-  _.forOwn(maps, (value, key) => {
-    
-    if (value) {
-      let texture;
-      if (key === 'color' && url) {
-        texture = textureLoader.load(url);
-        texture.repeat.set(1, 1);
-      } else {
-        texture = textureLoader.load(`${path}${key}.jpg`);
-        texture.repeat.set(scale, scale);
-      }
-      texture.wrapS = RepeatWrapping;
-      texture.wrapT = RepeatWrapping;
-
-      texture.flipY = flip ? true : false;
-
-      if (key === 'color') {
-        texture.encoding = sRGBEncoding;
-      }
-
-      texturePack[dict[key]] = texture;
-    } else {
-      texturePack[dict[key]] = null;
-    }
-  });
-
-  return texturePack;
-};
-
 const defaults = {
   tag: 'default',
   type: 'standard',
@@ -111,15 +57,15 @@ const defaults = {
 };
 
 class Material {
-  constructor(settings = {}, tag, globalParent) {
-    this.material = null;
+  constructor(settings = {}, tag, globalParent, sectionParent) {
+    this.material = new MeshPhysicalMaterial();
     this.tag = tag;
     this.wireframe = false;
     this.uuid = uuidv4();
     this.settings = _.defaultsDeep({}, settings, defaults);
     this.cache = {};
     this.globalParent = globalParent;
-    this.batchToLoad = null;
+    this.sectionParent = sectionParent;
     this._init();
   }
 
@@ -127,10 +73,70 @@ class Material {
     return this.material;
   }
 
+  _getTexturePack (pack) {
+    const {
+      folder,
+      tag,
+      repeat,
+      flip,
+      url,
+      ...maps
+    } = pack;
+    const path = `${TEXTURE_PATH}/${folder}/`;
+    const scale = repeat > 1 ? repeat : 1;
+  
+    /**
+     * Dict renames the values to spread maps into material
+     */
+    const dict = {
+      color: 'map',
+      ao: 'aoMap',
+      normal: 'normalMap',
+      roughness: 'roughnessMap',
+      alpha: 'alphaMap',
+    };
+  
+  
+    _.forOwn(maps, (value, key) => {
+      
+      if (value) {
+
+        let resource = key === 'color' && url ? url : `${path}${key}.jpg`;
+        let size = key === 'color' && url ? 1 : scale;
+
+          textureLoader.load(resource, (texture) => {
+            texture.repeat.set(size, size);
+            
+        
+            texture.wrapS = RepeatWrapping;
+            texture.wrapT = RepeatWrapping;
+      
+            texture.flipY = flip ? true : false;
+      
+            if (key === 'color') {
+              
+              texture.encoding = sRGBEncoding;
+            }
+            const vals = {};
+            vals[dict[key]] = texture;
+            this.material.setValues({...vals});
+            
+          });
+        
+        }
+    });
+    
+  };
+
   _onTextureLoaded() {
    document.dispatchEvent(new Event('Ubiety:onLoad'));
    this.globalParent.initialMaterialsLoaded = true;
+   const newMat = this.material.clone(); 
+   this.sectionParent.setMaterialDirectly(newMat);
+
+   // this.sectionParent.mesh.material = this.material;
    this.globalParent._render();
+   
 
   }
 
@@ -164,16 +170,15 @@ class Material {
       ...overrides,
     };
 
-    const texturePack = getTexturePack(settings.texture);
-    const shapedSettings = this._shapeSettings(settings, texturePack);
+    this._getTexturePack(settings.texture);
+    const shapedSettings = this._shapeSettings(settings);
 
     this._buildMaterial({
       ...shapedSettings,
-      ...texturePack,
     });
   }
 
-  _shapeSettings(settings, texturePack) {
+  _shapeSettings(settings) {
     const {
       type,
       tag,
@@ -191,7 +196,7 @@ class Material {
     shapedSettings.side = doubleSided ? DoubleSide : FrontSide;
     shapedSettings.normalScale = new Vector2(normalIntensity, normalIntensity);
     shapedSettings.envMap = disableEnvMap ? null : this.textureCube;
-    shapedSettings.transparent = _.has(texturePack, 'alphaMap') && true;
+    shapedSettings.transparent = true;
 
     return shapedSettings;
   }
@@ -235,22 +240,16 @@ class Material {
      * – roughness
      */
 
-    const texturePack = getTexturePack({
+    this._getTexturePack({
       ...def,
       ...txt,
       ...overrides.texture,
     });
 
-    const shapedSettings = this._shapeSettings(rest, texturePack);
-  
-    this.batchToLoad = {
-      ...texturePack,
-      ...shapedSettings,
-    };
+    const shapedSettings = this._shapeSettings(rest);
 
     this.material.setValues({
-      ...texturePack,
-      ...shapedSettings,
+      ...shapedSettings
     });
     this.material.needsUpdate = true;
   }
