@@ -98,7 +98,6 @@ class Material {
   
   
     _.forOwn(maps, (value, key) => {
-      
       if (value) {
 
         let resource = key === 'color' && url ? url : `${path}${key}.jpg`;
@@ -114,15 +113,19 @@ class Material {
             texture.flipY = flip ? true : false;
       
             if (key === 'color') {
-              
               texture.encoding = sRGBEncoding;
             }
             const vals = {};
             vals[dict[key]] = texture;
             this.material.setValues({...vals});
-            
+            this.material.needsUpdate = true;
           });
         
+        } else {
+          const falsies = {};
+          falsies[dict[key]] = null;
+          this.material.setValues({...falsies});
+          this.material.needsUpdate = true;
         }
     });
     
@@ -134,7 +137,7 @@ class Material {
    const newMat = this.material.clone(); 
    this.sectionParent.setMaterialDirectly(newMat);
 
-   // this.sectionParent.mesh.material = this.material;
+   this.sectionParent.mesh.material = this.material;
    this.globalParent._render();
    
 
@@ -251,7 +254,6 @@ class Material {
     this.material.setValues({
       ...shapedSettings
     });
-    this.material.needsUpdate = true;
   }
 }
 
