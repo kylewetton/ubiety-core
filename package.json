@@ -54,6 +54,7 @@
     "lodash": "^4.17.20",
     "shifty": "^2.12.0",
     "three": "^0.119.1",
+    "ubiety-custom-texture": "file:../ubiety-custom-texture",
     "uuid": "^8.3.0"
   }
 }

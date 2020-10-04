@@ -7,6 +7,7 @@
  */
 
 import _ from 'lodash';
+import UbietyCustomTexture from 'ubiety-custom-texture';
 import {
   tween,
 } from 'shifty';
@@ -234,8 +235,8 @@ class Ubiety {
     this.materials = {};
     this.events = {};
     this.initialMaterialsLoaded = false;
-    this.inArMode = false;
     this.frozen = false;
+    this.plugins = [];
   }
 
   /**
@@ -353,6 +354,7 @@ class Ubiety {
         this._buildEngine();
         this._updateSectionIndexes();
         this._buildCoreUI();
+        this._initPlugins();
       }
     };
   }
@@ -567,10 +569,6 @@ class Ubiety {
       this._render();
     }
     this.controls.update();
-    if (this.inArMode) {
-      this.arCamera.updateFrame(this.renderer);
-      this._render(true);
-    }
   }
 
   /**
@@ -758,6 +756,22 @@ class Ubiety {
     this.frozen = false;
   }
 
+  registerPlugin(plugin) {
+    this.plugins.push(plugin);
+  }
+
+  /** Plugin: Custom Texture Module */
+
+  _initPlugins() {
+    this.plugins.forEach(plugin => {
+      if (plugin === 'ubiety-custom-texture' && !this.customTextureModule) {
+        this.customTextureModule = new UbietyCustomTexture('ubiety-custom-texture', this);
+      } else {
+        console.error('Ubiety:: Either a plugin can\'t be recognised, or it already exists.');
+      }
+    });
+  }
+
   /**
    * Augmented Reality
    */
@@ -888,6 +902,38 @@ class Ubiety {
       this.ui.sectionCount
     }`;
   }
+
+  /**
+   * Custom Texture
+   */
+
+  addImageToCropper(path) {
+    if (this.customTextureModule instanceof UbietyCustomTexture) {
+      this.customTextureModule.loadImage(path, this.activeSection);
+    }
+  }
+
+  tileCustomTexture(repeat = 4) {
+    if (this.customTextureModule instanceof UbietyCustomTexture) {
+      this.customTextureModule.repeat(repeat);
+    }
+  }
+
+  getImageFromCropper() {
+    return new Promise((res, rej) => {
+      if (this.customTextureModule instanceof UbietyCustomTexture) {
+        this.customTextureModule.get().then(data => res(data));
+      }
+    });
+  }
+
+  removeCustomTexture() {
+    if (this.customTextureModule instanceof UbietyCustomTexture) {
+      this.customTextureModule.clear();
+      this.activeSection.currentMaterial.revertToPreviousMaterial();
+    }
+  }
+
 }
 
 export default Ubiety;

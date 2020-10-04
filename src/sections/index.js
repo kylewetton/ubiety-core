@@ -30,7 +30,7 @@ class Section {
    * @param {Object}          Class    - Parent Ubiety Class
    */
   constructor(mesh, index, globalParent) {
-    this.mesh = exists(mesh, 'A Section class needs a mesh to construct. ');
+    this.mesh = exists(mesh, 'A Section class needs a mesh to construct.');
     this.tag = mesh.name;
     this.index = index;
     this.active = false;
@@ -145,6 +145,8 @@ class Section {
 
   setMaterialDirectly(material) {
     this.mesh.material = material;
+    this.children.forEach((child) => child.setMaterialDirectly(material));
+    this.globalParent._render();
   }
 
   getTagAsLabel() {

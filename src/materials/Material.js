@@ -34,7 +34,6 @@ const cubeTextureLoader = new CubeTextureLoader(textureLoadManager);
 
 const defaults = {
   tag: 'default',
-  type: 'standard',
   color: '#ffffff',
   opacity: 1.0,
   transparent: false,
@@ -54,6 +53,7 @@ const defaults = {
   reflectivity: 0.5,
   envMapIntensity: 1,
   disableEnvMap: false,
+  blendable: true
 };
 
 class Material {
@@ -254,6 +254,17 @@ class Material {
     this.material.setValues({
       ...shapedSettings
     });
+  }
+
+  cacheCurrentMaterial() {
+    this.cache = this.material.clone();
+  }
+  revertToPreviousMaterial() {
+    if (this.cache) {
+      this.material = this.cache;
+      this.material.needsUpdate = true;
+      this.sectionParent.setMaterialDirectly(this.material);
+    }
   }
 }
 
