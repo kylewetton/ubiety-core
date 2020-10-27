@@ -909,7 +909,7 @@ class Ubiety {
 
   addImageToCropper(path) {
     if (this.customTextureModule instanceof UbietyCustomTexture) {
-      this.customTextureModule.loadImage(path, this.activeSection);
+      this.customTextureModule.loadImage(path);
     }
   }
 
@@ -927,11 +927,8 @@ class Ubiety {
     });
   }
 
-  removeCustomTexture() {
-    if (this.customTextureModule instanceof UbietyCustomTexture) {
-      this.customTextureModule.clear();
-      this.activeSection.currentMaterial.revertToPreviousMaterial();
-    }
+  restorePreviousMaterial() {
+    this.activeSection.restorePreviousMaterial();
   }
 
 }

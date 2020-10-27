@@ -35,6 +35,7 @@ class Section {
     this.index = index;
     this.active = false;
     this.currentMaterial = null;
+    this.previousMaterialAsSettings = {};
     this.materialAsSettings = {};
     this.globalParent = globalParent;
     this.children = [];
@@ -48,6 +49,7 @@ class Section {
       ? materialSettings.material
       : materialSettings;
 
+    this._storeAsPreviousMaterial();
     this.materialAsSettings = settings;
 
     const material = new Material(settings, this.tag, this.globalParent, this);
@@ -63,6 +65,7 @@ class Section {
   swapColor(hex, _updateMaterialCache = true) {
     this.currentMaterial.swapColor(hex, _updateMaterialCache);
     if (_updateMaterialCache) {
+      this._storeAsPreviousMaterial();
       this.materialAsSettings.color = hex;
     }
     this.children.forEach((child) => child.swapColor(hex, _updateMaterialCache));
@@ -73,12 +76,19 @@ class Section {
     newSettings.color = this.materialAsSettings.color;
     this.currentMaterial.swapTexture(newSettings);
     this.children.forEach((child) => child.swapTexture(txt));
+    this._storeAsPreviousMaterial();
     this.materialAsSettings = newSettings;
+  }
+
+  restorePreviousMaterial() {
+    this.currentMaterial.swapTexture(this.previousMaterialAsSettings);
+    this.children.forEach((child) => child.swapTexture(this.previousMaterialAsSettings));
+    this.materialAsSettings = _.defaultsDeep({}, this.previousMaterialAsSettings);
   }
 
   flash() {
     const color = this.globalParent.settings.flashColor;
-    const currentColor = this.currentMaterial.settings.color;
+    const currentColor = this.materialAsSettings.color || '#FFFFFF';
 
     tween({
       from: {
@@ -177,6 +187,10 @@ class Section {
 
   setVisibility(visible) {
     this.mesh.visible = visible;
+  }
+
+  _storeAsPreviousMaterial() {
+    this.previousMaterialAsSettings = _.defaultsDeep({}, this.materialAsSettings);
   }
 }
 

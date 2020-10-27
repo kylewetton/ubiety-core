@@ -63,7 +63,6 @@ class Material {
     this.wireframe = false;
     this.uuid = uuidv4();
     this.settings = _.defaultsDeep({}, settings, defaults);
-    this.cache = {};
     this.globalParent = globalParent;
     this.sectionParent = sectionParent;
     this._init();
@@ -82,7 +81,7 @@ class Material {
       url,
       ...maps
     } = pack;
-    const path = `${TEXTURE_PATH}/${folder}/`;
+    const path = `${this.globalParent.settings.devSlug ? `/${this.globalParent.settings.devSlug}/` : '/'}${TEXTURE_PATH}/${folder}/`;
     const scale = repeat > 1 ? repeat : 1;
   
     /**
@@ -155,7 +154,7 @@ class Material {
       }
     }
 
-    const r = `${TEXTURE_PATH}/cubemap/${this.globalParent.settings.studioType}/`;
+    const r =  `${this.globalParent.settings.devSlug ? `/${this.globalParent.settings.devSlug}/` : '/'}${TEXTURE_PATH}/cubemap/${this.globalParent.settings.studioType}/`;
     const urls = [
       `${r}px.png`,
       `${r}nx.png`,
@@ -256,16 +255,6 @@ class Material {
     });
   }
 
-  cacheCurrentMaterial() {
-    this.cache = this.material.clone();
-  }
-  revertToPreviousMaterial() {
-    if (this.cache) {
-      this.material = this.cache;
-      this.material.needsUpdate = true;
-      this.sectionParent.setMaterialDirectly(this.material);
-    }
-  }
 }
 
 export default Material;
