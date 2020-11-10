@@ -355,6 +355,7 @@ class Ubiety {
         this._updateSectionIndexes();
         this._buildCoreUI();
         this._initPlugins();
+        document.dispatchEvent(new Event('Ubiety:dataInitialized'));
       }
     };
   }
@@ -507,8 +508,10 @@ class Ubiety {
       width,
       height,
     } = getSize(this.root);
-    this.mouse.x = isMobile ? (evt.touches[0].clientX / width) * 2 - 1 : (evt.clientX / width) * 2 - 1;
-    this.mouse.y = isMobile ? -(evt.touches[0].clientY / height) * 2 + 1 : -(evt.clientY / height) * 2 + 1;
+    const bounds = this.root.getBoundingClientRect();
+    
+    this.mouse.x = isMobile ? ((evt.touches[0].clientX - bounds.left) / width) * 2 - 1 : ((evt.clientX - bounds.left) / width) * 2 - 1;
+    this.mouse.y = isMobile ? -((evt.touches[0].clientY - bounds.top) / height) * 2 + 1 : -((evt.clientY - bounds.top) / height) * 2 + 1;
   }
 
   _raycast() {
@@ -846,16 +849,19 @@ class Ubiety {
     const uiSectionMenu = document.createElement('button');
     const uiNextSection = document.createElement('button');
     const uiPrevSection = document.createElement('button');
+    const uiButtonSeperator = document.createElement('span');
 
     /** Classes */
     uiSelectorWrapper.classList.add('ubiety__section-selector');
     uiSelectorColLeft.classList.add('ubiety__col', 'ubiety__col--left');
-    uiSectionMenu.classList.add('ubiety__section-menu');
+    uiSectionMenu.classList.add('ubiety__section-menu', 'umjs-toggle-controller-list');
+    uiSectionMenu.dataset.control = 'umjs-section-option-list';
     uiSelectorColRight.classList.add('ubiety__col', 'ubiety__col--right');
     uiSelectorTitle.classList.add('ubiety__selector-title');
     uiBreadcrumb.classList.add('ubiety__breadcrumb');
     uiNextSection.classList.add('ubiety__next-section', 'ubiety__jump-section');
     uiPrevSection.classList.add('ubiety__prev-section', 'ubiety__jump-section');
+    uiButtonSeperator.classList.add('ubiety__section-seperator');
 
     /** Store */
     this.ui.selectorTitle = uiSelectorTitle;
@@ -865,15 +871,6 @@ class Ubiety {
     uiPrevSection.innerHTML = `<i class="icon-prev">${icons.right}</i>`;
     uiSectionMenu.innerHTML = `<i class="icon-menu">${icons.menu}</i>`;
 
-    /** Events */
-
-    uiNextSection.addEventListener('click', () => {
-      this.nextSection();
-    });
-
-    uiPrevSection.addEventListener('click', () => {
-      this.prevSection();
-    });
 
     /** Sort */
 
@@ -883,6 +880,7 @@ class Ubiety {
     uiSelectorColLeft.appendChild(uiCurrentSection);
 
     uiSelectorColRight.appendChild(uiPrevSection);
+    uiSelectorColRight.appendChild(uiButtonSeperator);
     uiSelectorColRight.appendChild(uiNextSection);
 
     uiSelectorWrapper.appendChild(uiSelectorColLeft);
@@ -893,6 +891,17 @@ class Ubiety {
     }
     selectorParent.appendChild(uiSelectorWrapper);
     this._updateSectionSelector();
+
+    /** Events */
+
+    uiNextSection.addEventListener('click', () => {
+      this.nextSection();
+    });
+
+    uiPrevSection.addEventListener('click', () => {
+      this.prevSection();
+    });
+    
     window.dispatchEvent(new Event('resize'));
   }
 
@@ -929,6 +938,10 @@ class Ubiety {
 
   restorePreviousMaterial() {
     this.activeSection.restorePreviousMaterial();
+  }
+
+  clearCropper() {
+    this.customTextureModule.clear();
   }
 
 }
