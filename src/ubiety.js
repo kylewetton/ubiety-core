@@ -64,6 +64,7 @@ import {
   sortObjectByArray,
   cleanScale,
   isTouchDevice,
+  isUrl
 } from './utils';
 import Section from './sections';
 
@@ -578,28 +579,26 @@ class Ubiety {
    * Actions
    */
 
-  swapColor(hex) {
-    const section = this.sections.filter((s) => s.isActive())[0];
+  swapColor(hex, updateMaterialCache, tag = null) {
+    const section = tag ? this.sections.filter((s) => s.getTag() === tag)[0]
+    : this.sections.filter((s) => s.isActive())[0];
     let hasCustomImage = false;
 
-    if (
-      'texture' in section.materialAsSettings &&
-        'url' in section.materialAsSettings.texture &&
-        section.materialSettings.texture.url
-        ) {
-          
-        hasCustomImage = true;
+    if (section.hasUserUploadedPhoto) {
+       
+      hasCustomImage = true;    
     }
 
     if (section) {
-      section.swapColor(hasCustomImage ? '#FFFFFF' : hex);
-      this._render();
+      section.swapColor(hasCustomImage ? '#FFFFFF' : hex, updateMaterialCache);
+        this._render();
     }
   }
 
-  swapTexture(txt) {
-    const section = this.sections.filter((s) => s.isActive())[0];
-    section.swapTexture(txt);
+  swapTexture(txt, tag = null, isUserUploaded) {
+    const section = tag ? this.sections.filter((s) => s.getTag() === tag)[0]
+      : this.sections.filter((s) => s.isActive())[0];
+    section.swapTexture(txt, isUserUploaded);
     this._render();
   }
 
@@ -768,8 +767,12 @@ class Ubiety {
   _initPlugins() {
     this.plugins.forEach(plugin => {
       if (plugin === 'ubiety-custom-texture' && !this.customTextureModule) {
-        this.customTextureModule = new UbietyCustomTexture('ubiety-custom-texture', this);
-      } else {
+        this.customTextureModule = new UbietyCustomTexture('ubiety-custom-texture', this, 'umjs-texture-factory');
+      }
+      else if (plugin === 'ubiety-text-editor' && !this.customTextEditorModule) {
+        this.customTextEditorModule = new UbietyCustomTexture('ubiety-text-editor', this, 'umjs-text-image-factory');
+      }
+      else {
         console.error('Ubiety:: Either a plugin can\'t be recognised, or it already exists.');
       }
     });
@@ -931,7 +934,16 @@ class Ubiety {
   getImageFromCropper() {
     return new Promise((res, rej) => {
       if (this.customTextureModule instanceof UbietyCustomTexture) {
-        this.customTextureModule.get().then(data => res(data));
+        this.customTextureModule.sideLoad().then(data => res(data));
+      }
+    });
+  }
+
+  getTextImageFromCropper() {
+    // this.customTextureModule.sideLoad();
+    return new Promise((res, rej) => {
+      if (this.customTextEditorModule instanceof UbietyCustomTexture) {
+        this.customTextEditorModule.sideLoad().then(data => res(data));
       }
     });
   }
@@ -943,6 +955,26 @@ class Ubiety {
   clearCropper() {
     this.customTextureModule.clear();
   }
+
+  clearTextCropper() {
+    return new Promise((res, rej) => {
+      this.customTextEditorModule.clear().then(data => res(data));
+    });
+    
+  }
+  /**
+   * Custom Text Editor
+   */
+
+   startTextEditor() {
+     if (this.customTextEditorModule) {
+      this.customTextEditorModule.text();
+     }
+   }
+
+   updateTextColor() {
+     this.customTextureModule.updateTextColor();
+   }
 
 }
 

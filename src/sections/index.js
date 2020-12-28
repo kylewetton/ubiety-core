@@ -42,6 +42,7 @@ class Section {
     this.disabled = mesh.disabled;
     this.isChild = false;
     this.activeChild = null;
+    this.hasUserUploadedPhoto = false;
   }
 
   updateMaterial(materialSettings) {
@@ -49,7 +50,7 @@ class Section {
       ? materialSettings.material
       : materialSettings;
 
-    this._storeAsPreviousMaterial();
+    this._storeAsPreviousMaterial('update material');
     this.materialAsSettings = settings;
 
     const material = new Material(settings, this.tag, this.globalParent, this);
@@ -65,19 +66,20 @@ class Section {
   swapColor(hex, _updateMaterialCache = true) {
     this.currentMaterial.swapColor(hex, _updateMaterialCache);
     if (_updateMaterialCache) {
-      this._storeAsPreviousMaterial();
+      this._storeAsPreviousMaterial('swap colour');
       this.materialAsSettings.color = hex;
     }
     this.children.forEach((child) => child.swapColor(hex, _updateMaterialCache));
   }
 
-  swapTexture(txt) {
+  swapTexture(txt, isUserUploaded = false) {
     const newSettings = txt.dynamic ? _.defaultsDeep({}, txt, this.materialAsSettings) : txt;
     newSettings.color = this.materialAsSettings.color;
     this.currentMaterial.swapTexture(newSettings);
     this.children.forEach((child) => child.swapTexture(txt));
-    this._storeAsPreviousMaterial();
+    this._storeAsPreviousMaterial('swap texture');
     this.materialAsSettings = newSettings;
+    this.hasUserUploadedPhoto = isUserUploaded;
   }
 
   restorePreviousMaterial() {
@@ -189,7 +191,7 @@ class Section {
     this.mesh.visible = visible;
   }
 
-  _storeAsPreviousMaterial() {
+  _storeAsPreviousMaterial(moment) {
     this.previousMaterialAsSettings = _.defaultsDeep({}, this.materialAsSettings);
   }
 }

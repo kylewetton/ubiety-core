@@ -36,7 +36,10 @@ const getTexturePack = (pack) => {
   _.forOwn(maps, (value, key) => {
     if (value) {
       let texture;
-      if (key === 'color' && url) {
+      if (key === 'color' && this.globalParent.activeSection.customImage) {
+        texture = textureLoader.load(this.globalParent.activeSection.customImage);
+      }
+      else if (key === 'color' && url && !this.globalParent.activeSection.customImage) {
         texture = textureLoader.load(url);
         texture.repeat.set(1, 1);
       } else {
@@ -53,9 +56,6 @@ const getTexturePack = (pack) => {
       texturePack[dict[key]] = texture;
     }
   });
-  if (url) {
-    console.log(texturePack);
-  }
 
   return texturePack;
 };

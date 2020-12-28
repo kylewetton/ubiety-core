@@ -94,13 +94,20 @@ class Material {
       roughness: 'roughnessMap',
       alpha: 'alphaMap',
     };
+
+    let packUrl = url;
+
+    if (this.globalParent.activeSection.customImage) {
+      maps.color = true;
+      packUrl = this.globalParent.activeSection.customImage;
+    }
   
   
     _.forOwn(maps, (value, key) => {
       if (value) {
 
-        let resource = key === 'color' && url ? url : `${path}${key}.jpg`;
-        let size = key === 'color' && url ? 1 : scale;
+        let resource = key === 'color' && packUrl ? packUrl : `${path}${key}.jpg`;
+        let size = key === 'color' && packUrl ? 1 : scale;
 
           textureLoader.load(resource, (texture) => {
             texture.repeat.set(size, size);
